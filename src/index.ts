@@ -1,7 +1,7 @@
-const init = function() {
-  console.log('init')
-}
+const monitor = {
+  init: function () {
+    console.log("init");
+  },
+};
 
-export {
-  init
-}
+export default monitor;

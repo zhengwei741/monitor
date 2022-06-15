@@ -4,7 +4,7 @@ module.exports = {
         "es2021": true
     },
     "extends": [
-        "standard"
+        'plugin:@typescript-eslint/recommended'
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -15,5 +15,13 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
-    }
+    },
+    "overrides": [
+        {
+            files: ['*.ts'],
+            parser: '@typescript-eslint/parser',
+            plugins: ['@typescript-eslint'],
+            extends: ['plugin:@typescript-eslint/recommended'],
+        }
+    ]
 }
