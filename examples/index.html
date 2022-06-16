@@ -7,11 +7,21 @@
     <title>Document</title>
   </head>
 
-  <script src="../dist/monitor.umd.js"></script>
+  <!-- <script src="../dist/monitor.umd.js"></script> -->
   <script>
-    window.onload = function () {
-      console.log(monitor);
-    };
+    window.addEventListener(
+      "error",
+      (e) => {
+        console.log(e);
+      },
+      true
+    );
+  </script>
+  <script>
+    console.log(asd);
+    // window.onload = function () {
+    //   console.log(monitor);
+    // };
     // console.log(webtracing);
     // webtracing.init({
     //   requestUrl: "http://172.15.224.10:33199/trackweb/tra",
@@ -19,7 +29,7 @@
     //   event: true,
     // });
   </script>
-
+  <!-- <script src="monitor.umd.js"></script> -->
   <body>
     <!-- <button data-warden-event-id="demo01">demo01</button>
     <br />
