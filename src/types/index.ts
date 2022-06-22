@@ -33,7 +33,7 @@ export interface PerformanceConfig {
 }
 
 export interface ReportData {
-  [key: string]: number | string | any;
+  [key: string]: any | any[];
 }
 
 export type ViewModel = {
@@ -83,6 +83,38 @@ export interface PerformanceEntryHandler {
   (entry: PerformanceEntry): void;
 }
 
-export interface PerformanceKpi {
-  [key: string]: number
+export interface MPerformanceNavigationTiming {
+  FP?: number;
+  TTI?: number;
+  DomReady?: number;
+  Load?: number;
+  FirseByte?: number;
+  DNS?: number;
+  TCP?: number;
+  SSL?: number;
+  TTFB?: number;
+  Trans?: number;
+  DomParse?: number;
+  Res?: number;
+  FMP?: number;
+}
+
+export interface resourceFlow {
+  // name 资源地址
+  name?: string,
+  // transferSize 传输大小
+  transferSize: number,
+  // initiatorType 资源类型
+  initiatorType: string,
+  // startTime 开始时间
+  startTime: number,
+  // responseEnd 结束时间
+  responseEnd: number,
+  // 贴近 Chrome 的近似分析方案，受到跨域资源影响
+  dnsLookup: number,
+  initialConnect: number,
+  ssl: number,
+  request: number,
+  ttfb: number,
+  contentDownload: number,
 }

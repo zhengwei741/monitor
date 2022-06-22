@@ -28,7 +28,7 @@ export interface PerformanceConfig {
     api?: boolean;
 }
 export interface ReportData {
-    [key: string]: number | string | any;
+    [key: string]: any | any[];
 }
 export declare type ViewModel = {
     _isVue?: boolean;
@@ -66,6 +66,31 @@ export interface Vue {
 export interface PerformanceEntryHandler {
     (entry: PerformanceEntry): void;
 }
-export interface PerformanceKpi {
-    [key: string]: number;
+export interface MPerformanceNavigationTiming {
+    FP?: number;
+    TTI?: number;
+    DomReady?: number;
+    Load?: number;
+    FirseByte?: number;
+    DNS?: number;
+    TCP?: number;
+    SSL?: number;
+    TTFB?: number;
+    Trans?: number;
+    DomParse?: number;
+    Res?: number;
+    FMP?: number;
+}
+export interface resourceFlow {
+    name?: string;
+    transferSize: number;
+    initiatorType: string;
+    startTime: number;
+    responseEnd: number;
+    dnsLookup: number;
+    initialConnect: number;
+    ssl: number;
+    request: number;
+    ttfb: number;
+    contentDownload: number;
 }

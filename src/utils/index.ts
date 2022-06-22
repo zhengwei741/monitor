@@ -12,3 +12,11 @@ export const nextTime =
 export function getPageURL() {
   return window.location.href 
 }
+
+export function onAfterLoad (callback: any) {
+  if (document.readyState === 'complete') {
+    setTimeout(callback)
+  } else {
+    window.addEventListener('pageshow', callback, { once: true, capture: true });
+  }
+}
