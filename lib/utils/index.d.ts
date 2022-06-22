@@ -4,11 +4,5 @@
  * requestAnimationFrame 是浏览器必须执行的
  * 关于 requestIdleCallback 和  requestAnimationFrame 可以参考 https://www.cnblogs.com/cangqinglang/p/13877078.html
  */
-export const nextTime =
-  window.requestIdleCallback ||
-  window.requestAnimationFrame ||
-  ((callback) => setTimeout(callback, 17));
-
-export function getPageURL() {
-  return window.location.href 
-}
+export declare const nextTime: ((callback: IdleRequestCallback, options?: IdleRequestOptions | undefined) => number) & typeof requestIdleCallback;
+export declare function getPageURL(): string;

@@ -6,7 +6,7 @@ const max = 5;
 let baseUrl = "";
 let baseInfo = {};
 
-export const init = function (options) {
+export const init = function (options: any) {
   const { url, appId, userId } = options;
   baseUrl = url;
   baseInfo = {
@@ -14,6 +14,8 @@ export const init = function (options) {
     userId,
   };
 };
+
+let timer: number | undefined = undefined
 
 export const report = function (data: ReportData, immediate = false) {
   if (immediate) {
@@ -25,11 +27,11 @@ export const report = function (data: ReportData, immediate = false) {
     return;
   }
   caches.push(data);
-
+  clearTimeout(timer);
   if (caches.length >= max) {
     send();
   } else {
-    nextTime(send);
+    timer = window.setTimeout(send, 5000)
   }
 };
 
@@ -50,16 +52,24 @@ export const send = function () {
   }
 };
 
-const sendBeacon = window.navigator.sendBeacon
-  ? (url, data) => {
-      if (url && data) {
-        window.navigator.sendBeacon(url, JSON.stringify(data));
-      }
-    }
-  : (url, data) => {
-      const img = new Image();
-      img.src = `${url}?v=${encodeURIComponent(JSON.stringify(data))}`;
-    };
+// const sendBeacon = window.navigator.sendBeacon
+//   ? (url: string, data: any) => {
+//       if (url && data) {
+//         window.navigator.sendBeacon(url, JSON.stringify(data));
+//       }
+//     }
+//   : (url: string, data: any) => {
+//       // const img = new Image();
+//       // img.src = `${url}?v=${encodeURIComponent(JSON.stringify(data))}`;
+//       const xhr = new XMLHttpRequest()
+//       xhr.open('POST', url)
+//       xhr.send(JSON.stringify(data))
+//     };
+
+const sendBeacon = (url: string, data: any) => {
+  console.log(url, '--------------url')
+  console.log(data, '--------------data')
+}
 
 window.addEventListener("beforeunload", () => {
   send();

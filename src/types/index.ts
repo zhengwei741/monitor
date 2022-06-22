@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface MonitorConfigOptions {
   url: string;
   behavior?: boolean | BehaviorConfig;
@@ -5,7 +6,7 @@ export interface MonitorConfigOptions {
   performance?: boolean | PerformanceConfig;
 }
 
-interface BehaviorConfig {
+export interface BehaviorConfig {
   ip?: boolean;
   userInfo?: boolean;
   pv?: boolean;
@@ -14,25 +15,25 @@ interface BehaviorConfig {
   depth?: boolean;
 }
 
-interface ErrorConfig {
+export interface ErrorConfig {
   resource?: boolean;
   promise?: boolean;
   js?: boolean;
   vue?: boolean;
 }
 
-interface PerformanceConfig {
+export interface PerformanceConfig {
   frame?: boolean;
   fp?: boolean;
   fcp?: boolean;
   lcp?: boolean;
   cls?: boolean;
   resource?: boolean;
-  interface?: boolean;
+  api?: boolean;
 }
 
 export interface ReportData {
-  [key: string]: number | string;
+  [key: string]: number | string | any;
 }
 
 export type ViewModel = {
@@ -50,3 +51,38 @@ export type ViewModel = {
     __file?: string;
   };
 };
+
+export interface PerformanceEntryHandler {
+  (entry: PerformanceEntry): void;
+}
+
+export type Hook =
+  | 'activated'
+  | 'beforeCreate'
+  | 'beforeDestroy'
+  | 'beforeMount'
+  | 'beforeUpdate'
+  | 'created'
+  | 'deactivated'
+  | 'destroyed'
+  | 'mounted'
+  | 'updated';
+
+export interface Vue {
+  config: {
+    errorHandler?: any;
+    warnHandler?: any;
+    silent?: boolean;
+    globalProperties: { [key: string]: any }
+  };
+  mixin: (mixins: Partial<Record<Hook, any>>) => void;
+  prototype: any
+}
+
+export interface PerformanceEntryHandler {
+  (entry: PerformanceEntry): void;
+}
+
+export interface PerformanceKpi {
+  [key: string]: number
+}

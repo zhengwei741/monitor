@@ -2,9 +2,9 @@
   "name": "monitor",
   "version": "1.0.0",
   "description": "前端监控jssdk",
-  "main": "dist/monitor.cjs.js",
-  "module": "dist/monitor.esm.js",
-  "jsdelivr": "dist/monitor.umd.js",
+  "main": "lib/monitor.cjs.js",
+  "module": "lib/monitor.esm.js",
+  "jsdelivr": "lib/monitor.umd.js",
   "scripts": {
     "lint": "eslint --ext .js,.ts src",
     "dev": "rollup --config build/rollup.config.dev.js -w",
@@ -21,7 +21,9 @@
     "url": "https://github.com/zhengwei741/monitor/issues"
   },
   "homepage": "https://github.com/zhengwei741/monitor#readme",
-  "dependencies": {},
+  "dependencies": {
+    "web-vitals": "^2.1.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
@@ -34,10 +36,13 @@
     "lint-staged": "^13.0.1",
     "rollup": "^2.75.6",
     "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-eslint": "^7.0.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-typescript2": "^0.32.1",
     "rollup-plugin-uglify": "^6.0.4"
   }
 }
