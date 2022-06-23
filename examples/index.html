@@ -6,10 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <style></style>
+  <style>
+    #app{
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+  <body>
+    <!-- <img src="https://img0.baidu.com/it/u=3798217922,3880088897&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500"> -->
+    <div id="app"></div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
   <script src="../lib/monitor.umd.js"></script>
   <script>
-    monitor.init();
+    monitor.init({
+      error: {
+        resource: true,
+        promise: true,
+        js: true,
+        vue: Vue
+      }
+    });
+    // Vue.config.errorHandler = function(error, vm, lifecycleHook) {
+    //   console.log(error)
+    //   console.log(vm)
+    //   console.log(lifecycleHook)
+    // }
+    const app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          app: 'appp'
+        }
+      },
+      template: `<div>{{ app }}</div>`,
+      created() {
+        // setTimeout(() => {
+        //   console.log(asd)
+        // }, 100)
+        // window.ss()
+        // throw new Error('xxx')
+        // this.in()
+      },
+      methods: {
+        in() {
+          if (window.Promise) {
+            return new Promise((resolve) => {
+              // 一段耗时的异步操作
+              // eee.eew();
+              // resolve('成功'); // 数据处理完成
+              throw new Error('custom');
+            }).then(
+              (res) => { console.log(res); }, // 成功
+            );
+          }
+        }
+      }
+    })
+
+    // setTimeout(() => {
+    //   new Promise(() => {
+    //     throw new Error('Promise error')
+    //   })
+    // }, 100)
     // window.onload = function () {
     //   console.log(monitor);
     // };
@@ -21,14 +80,5 @@
     // });
   </script>
   <!-- <script src="monitor.umd.js"></script> -->
-  <body>
-    <img src="https://img0.baidu.com/it/u=3798217922,3880088897&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500">
-    <!-- <button data-warden-event-id="demo01">demo01</button>
-    <br />
-    <button data-warden-event-id="demo02">demo02</button>
-    <br />
-    <button data-warden-event-id="demo03">demo03</button>
-    <br />
-    <button data-warden-event-id="demo04">demo04</button> -->
-  </body>
+  <script src="http://localhost:8080/static/js/54.js"></script>
 </html>

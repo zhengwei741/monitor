@@ -20,3 +20,8 @@ export function onAfterLoad (callback: any) {
     window.addEventListener('pageshow', callback, { once: true, capture: true });
   }
 }
+
+// 对每一个错误详情，生成一串编码
+export const getErrorUid = (input: string) => {
+  return window.btoa(unescape(encodeURIComponent(input)));
+};

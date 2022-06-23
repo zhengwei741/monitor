@@ -1,5 +1,6 @@
-import { ViewModel, Vue } from "../types";
-import { report } from "../base";
+import { ViewModel, Vue, ExceptionMetrics } from "../types"
+import { reportErrorHandle } from './index'
+import { getErrorUid } from '../utils'
 
 const classifyRE = /(?:^|[-_])(\w)/g;
 const classify = (str: string): string =>
@@ -42,21 +43,25 @@ const generateComponentTrace = function (vm?: ViewModel) {
   return formatComponentName(vm, true);
 };
 
-export const vueError = function (vue: Vue) {
+export const initVueError = function (vue: Vue) {
   vue.config.errorHandler = function (
     error: Error,
     vm: ViewModel,
     lifecycleHook: string
   ) {
-    const reportData = {
-      error: error.message,
-      componentName: formatComponentName(vm),
-      trace: vm ? generateComponentTrace(vm) : "",
-      lifecycleHook,
+    const reportData: ExceptionMetrics = {
+      type: 'vueError',
+      errorUid: getErrorUid(`vue-${error.message}-${error.stack}`),
+      message: error.message,
+      stack: error.stack,
+      meta: {
+        lifecycleHook,
+        componentName: formatComponentName(vm),
+        trace: vm ? generateComponentTrace(vm) : "",
+        vm,
+        error
+      }
     };
-    report({
-      ...reportData,
-      eventType: "Error",
-    });
+    reportErrorHandle(reportData)
   };
 };

@@ -1,4 +1,4 @@
-import { ReportData } from "../types";
+import { ReportData, PageInformation } from "../types";
 import { nextTime } from "../utils";
 
 let caches: ReportData[] = [];
@@ -74,3 +74,28 @@ const sendBeacon = (url: string, data: any) => {
 window.addEventListener("beforeunload", () => {
   send();
 });
+
+export const getPageInfo = function() : PageInformation {
+  const { host, hostname, href, protocol, origin, port, pathname, search, hash } = window.location;
+  const { width, height } = window.screen;
+  const { language, userAgent } = navigator;
+
+  return {
+    host,
+    hostname,
+    href,
+    protocol,
+    origin,
+    port,
+    pathname,
+    search,
+    hash,
+    title: document.title,
+    language: language.substring(0, 2),
+    userAgent,
+    winScreen: `${width}x${height}`,
+    docScreen: `${document.documentElement.clientWidth || document.body.clientWidth}x${
+      document.documentElement.clientHeight || document.body.clientHeight
+    }`,
+  };
+}

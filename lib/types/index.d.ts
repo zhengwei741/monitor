@@ -94,3 +94,37 @@ export interface resourceFlow {
     ttfb: number;
     contentDownload: number;
 }
+export interface PageInformation {
+    host: string;
+    hostname: string;
+    href: string;
+    protocol: string;
+    origin: string;
+    port: string;
+    pathname: string;
+    search: string;
+    hash: string;
+    title: string;
+    language: string;
+    userAgent?: string;
+    winScreen: string;
+    docScreen: string;
+}
+export declare const enum mechanismType {
+    JS = "js",
+    RS = "resource",
+    UJ = "unhandledrejection",
+    HP = "http",
+    CS = "cors",
+    CO = "console",
+    VUE = "vue"
+}
+export interface ExceptionMetrics {
+    type: string;
+    errorUid: string;
+    message?: string;
+    stack?: string;
+    stackTrace?: unknown;
+    pageInformation?: PageInformation;
+    meta?: unknown;
+}

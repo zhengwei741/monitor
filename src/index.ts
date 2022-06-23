@@ -1,6 +1,7 @@
 import { MonitorConfigOptions } from "./types/index";
 import { Vue } from './types'
-import { init as performanceInit } from './performance'
+// import { init as performanceInit } from './performance'
+import { init as errorInit } from './error'
 
 // const defaultConfig: MonitorConfigOptions = {
 //   url: "",
@@ -11,8 +12,10 @@ import { init as performanceInit } from './performance'
 
 const init = function (options: MonitorConfigOptions) {
   normalizeConfig(options);
-  console.log("init");
-  performanceInit({})
+  const { error } = options
+  console.log("init--options", error);
+  // performanceInit({})
+  errorInit(error)
 };
 
 const normalizeConfig = function (options: MonitorConfigOptions) {
