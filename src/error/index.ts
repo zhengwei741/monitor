@@ -1,14 +1,16 @@
 import { report, getPageInfo } from "../base";
 import { initVueError } from './vue'
 import { getErrorUid } from '../utils'
-import { mechanismType, ExceptionMetrics } from '../types'
+import { mechanismType, ExceptionMetrics, HttpMetrics } from '../types'
+import { proxyFetch, proxyHttpRequest } from '../http'
 
 export const init = function (config: any) {
-  const { resource, promise, js, vue } = config;
+  const { resource, promise, js, vue, http } = config;
   resource && initResourceError();
   js && initJSError();
-  promise &&initPromiseError();
+  promise && initPromiseError();
   vue && initVueError(vue);
+  http && initHttpError()
 };
 
 const initResourceError = function () {
@@ -109,6 +111,26 @@ const initPromiseError = function () {
     }
   );
 };
+
+const initHttpError = function() {
+  const loadHandler = function(metrics: HttpMetrics) {
+    const { status, response } = metrics
+    if (status < 400) {
+      return
+    }
+    const httpErrorMechanism: ExceptionMetrics = {
+      errorUid: getErrorUid(`${mechanismType.HP}-${response}-${metrics.statusText}`),
+      type: 'httpError',
+      meta: {
+        metrics
+      }
+    }
+    reportErrorHandle(httpErrorMechanism)
+  }
+
+  proxyFetch(undefined, loadHandler)
+  proxyHttpRequest(undefined, loadHandler)
+}
 
 // 正则表达式，用以解析堆栈split后得到的字符串
 const FULL_MATCH =
