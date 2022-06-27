@@ -161,3 +161,15 @@ export interface ExceptionMetrics {
   pageInformation?: PageInformation; // 报错页面信息
   meta?: unknown; // 附带信息
 }
+
+export interface HttpMetrics {
+  method: string;
+  url: string | URL;
+  body: Document | XMLHttpRequestBodyInit | null | undefined | ReadableStream;
+  requestTime: number;
+  responseTime: number;
+  status: number;
+  statusText: string;
+  response?: any;
+}
+

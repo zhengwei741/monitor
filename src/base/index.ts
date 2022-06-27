@@ -61,9 +61,11 @@ export const send = function () {
 //   : (url: string, data: any) => {
 //       // const img = new Image();
 //       // img.src = `${url}?v=${encodeURIComponent(JSON.stringify(data))}`;
-//       const xhr = new XMLHttpRequest()
-//       xhr.open('POST', url)
-//       xhr.send(JSON.stringify(data))
+//       if ('oXMLHttpRequest' in window && typeof (window as any).oXMLHttpRequest === 'function') {
+//         const xhr = new (window as any).oXMLHttpRequest()
+//         xhr.open('POST', url)
+//         xhr.send(JSON.stringify(data))
+//       }
 //     };
 
 const sendBeacon = (url: string, data: any) => {

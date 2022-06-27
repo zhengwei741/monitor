@@ -1,7 +1,8 @@
 import { getPageURL, onAfterLoad } from '../utils'
-import { PerformanceConfig, MPerformanceNavigationTiming, resourceFlow } from '../types'
+import { PerformanceConfig, MPerformanceNavigationTiming, resourceFlow, HttpMetrics } from '../types'
 import { report } from "../base"
 import { getFCP, getLCP, getFID, getCLS, Metric } from 'web-vitals'
+import { proxyHttpRequest, proxyFetch } from '../http'
 
 // 兼容判断
 const supported = {
@@ -170,10 +171,30 @@ const observeResResourceFlow = function() {
   window.addEventListener('pageshow', stopListening, { once: true, capture: true });
 }
 
+const initHttp = function() {
+  const loadHandler = (metrics: HttpMetrics) => {
+    if (metrics.status < 400) {
+      delete metrics.response
+      delete metrics.body
+    }
+    report({
+      ...metrics,
+      // http时长
+      duration: metrics.requestTime - metrics.responseTime,
+      pageURL: getPageURL(),
+      subType: 'http',
+      type: 'performance'
+    })
+  }
+  proxyHttpRequest(undefined, loadHandler)
+  proxyFetch(undefined, loadHandler)
+}
+
 export const init = function(options: PerformanceConfig) {
   // const { frame, fp, fcp, lcp, cls, resource, api } = options
   initLCP()
   initCLS()
+  initHttp()
 
   onAfterLoad(() => {
     observeTiming()
