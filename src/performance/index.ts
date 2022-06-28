@@ -64,6 +64,7 @@ const observeTiming = function () {
   times.Res = loadEventStart - domContentLoadedEventEnd, // 资源加载耗时
   report({
     ...times,
+    subType: 'timing',
     type: 'performance',
     pageURL: getPageURL()
   })

@@ -32,7 +32,11 @@ export interface PerformanceConfig {
   api?: boolean;
 }
 
+type reportDataType = 'behavior' | 'error' | 'performance'
+
 export interface ReportData {
+  type: reportDataType;
+  subType?: string;
   [key: string]: any | any[];
 }
 
@@ -142,6 +146,7 @@ export interface PageInformation {
 }
 
 export const enum mechanismType {
+  // 错误异常
   JS = 'js',
   RS = 'resource',
   UJ = 'unhandledrejection',
@@ -149,6 +154,13 @@ export const enum mechanismType {
   CS = 'cors',
   CO = 'console',
   VUE = 'vue',
+  // 用户行为
+  PI = 'page-information',
+  OI = 'origin-information',
+  RCR = 'router-change-record',
+  CBR = 'click-behavior-record',
+  CDR = 'custom-define-record',
+  HT = 'http-record',
 }
 
 // 格式化后的 异常数据结构体
