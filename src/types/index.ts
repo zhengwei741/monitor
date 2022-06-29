@@ -160,7 +160,7 @@ export const enum mechanismType {
   RCR = 'router-change-record',
   CBR = 'click-behavior-record',
   CDR = 'custom-define-record',
-  HT = 'http-record',
+  HT = 'http-record'
 }
 
 // 格式化后的 异常数据结构体
@@ -185,3 +185,8 @@ export interface HttpMetrics {
   response?: any;
 }
 
+export interface BaseInfo {
+  baseUrl: string
+  appId: string
+  userId: string
+}

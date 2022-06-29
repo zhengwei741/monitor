@@ -1,5 +1,6 @@
-import { ExceptionMetrics } from '../types';
+import { mechanismType, ExceptionMetrics } from '../types';
 export declare const init: (config: any) => void;
+export declare const getErrorKey: (event: ErrorEvent | Event) => mechanismType.JS | mechanismType.RS | mechanismType.CS;
 export declare function parseStackLine(line: string): {
     filename?: undefined;
     functionName?: undefined;

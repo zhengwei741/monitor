@@ -1,7 +1,7 @@
 import { report, getPageInfo } from "../base";
 import { initVueError } from './vue'
 import { getErrorUid } from '../utils'
-import { mechanismType, ExceptionMetrics, HttpMetrics } from '../types'
+import { mechanismType, ExceptionMetrics, HttpMetrics, ReportData } from '../types'
 import { proxyFetch, proxyHttpRequest } from '../http'
 
 export const init = function (config: any) {
@@ -182,5 +182,5 @@ export const reportErrorHandle = function(errorMechanism: ExceptionMetrics) {
   }
   errorMechanism.pageInformation = getPageInfo()
 
-  report(errorMechanism)
+  report(errorMechanism as ReportData)
 }

@@ -27,7 +27,10 @@ export interface PerformanceConfig {
     resource?: boolean;
     api?: boolean;
 }
+declare type reportDataType = 'behavior' | 'error' | 'performance';
 export interface ReportData {
+    type: reportDataType;
+    subType?: string;
     [key: string]: any | any[];
 }
 export declare type ViewModel = {
@@ -117,7 +120,13 @@ export declare const enum mechanismType {
     HP = "http",
     CS = "cors",
     CO = "console",
-    VUE = "vue"
+    VUE = "vue",
+    PI = "page-information",
+    OI = "origin-information",
+    RCR = "router-change-record",
+    CBR = "click-behavior-record",
+    CDR = "custom-define-record",
+    HT = "http-record"
 }
 export interface ExceptionMetrics {
     type: string;
@@ -128,3 +137,19 @@ export interface ExceptionMetrics {
     pageInformation?: PageInformation;
     meta?: unknown;
 }
+export interface HttpMetrics {
+    method: string;
+    url: string | URL;
+    body: Document | XMLHttpRequestBodyInit | null | undefined | ReadableStream;
+    requestTime: number;
+    responseTime: number;
+    status: number;
+    statusText: string;
+    response?: any;
+}
+export interface BaseInfo {
+    baseUrl: string;
+    appId: string;
+    userId: string;
+}
+export {};

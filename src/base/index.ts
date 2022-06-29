@@ -1,18 +1,19 @@
-import { ReportData, PageInformation } from "../types";
+import { ReportData, PageInformation, BaseInfo } from "../types";
 import { nextTime } from "../utils";
 
 let caches: ReportData[] = [];
 const max = 5;
-let baseUrl = "";
-let baseInfo = {};
+const baseInfo: BaseInfo = {
+  baseUrl: '',
+  appId: '',
+  userId: ''
+};
 
 export const init = function (options: any) {
   const { url, appId, userId } = options;
-  baseUrl = url;
-  baseInfo = {
-    appId,
-    userId,
-  };
+  baseInfo.appId = appId
+  baseInfo.userId = userId
+  baseInfo.baseUrl = url
 };
 
 let timer: number | undefined = undefined
@@ -20,7 +21,7 @@ let timer: number | undefined = undefined
 export const report = function (data: ReportData, immediate = false) {
   if (immediate) {
     // 立即上传
-    sendBeacon(baseUrl, {
+    sendBeacon(baseInfo.baseUrl, {
       baseInfo,
       eventInfo: [data],
     });
@@ -41,7 +42,7 @@ export const send = function () {
     caches = caches.slice(max);
 
     const sendTime = Date.now();
-    sendBeacon(baseUrl, {
+    sendBeacon(baseInfo.baseUrl, {
       ...baseInfo,
       sendTime,
       data: sendEvents.map((event) => event),
@@ -100,4 +101,8 @@ export const getPageInfo = function() : PageInformation {
       document.documentElement.clientHeight || document.body.clientHeight
     }`,
   };
+}
+
+export const getBaseInfo = function (): BaseInfo {
+  return baseInfo
 }
