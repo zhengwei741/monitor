@@ -3,11 +3,13 @@ import { ReportData, mechanismType } from '../types'
 import { onAfterLoad } from '../utils'
 import Bowser from 'bowser'
 import uaParserJs from 'ua-parser-js'
+import { proxyFetch, proxyHttpRequest } from '../http'
 
 export const init = function () {
   // 用户基本信息
   initPageInfo()
   // 行为栈记录
+  initBreadcrumbs()
   // 路由跳转
   initRouterChange()
   // pv uv
@@ -29,6 +31,14 @@ const userBehaviorSendHandle = function(behaviorReportData = {}) {
   const reportData: ReportData = {
     ...behaviorReportData,
     type: 'behavior'
+  }
+  if (
+    reportData.subType === mechanismType.RCR ||
+    reportData.subType === mechanismType.CBR ||
+    reportData.subType === mechanismType.CDR ||
+    reportData.subType === mechanismType.HT
+  ) {
+    pushBreadcrumb(reportData)
   }
   report(reportData)
 }
@@ -207,7 +217,7 @@ const initClickHandler = function() {
           width: target.offsetWidth,
           height: target.offsetHeight,
           startTime: e.timeStamp,
-          subType: 'click',
+          subType: mechanismType.CBR,
         })
       }, 500)
     })
@@ -251,4 +261,44 @@ const initUserAgent = function () {
     subType: 'UserAgent',
     ...getFeature(window.navigator.userAgent)
   })
+}
+
+
+// -----------------------------
+// 路由跳转行为
+// 点击行为
+// ajax 请求行为
+// 用户自定义事件
+interface Breadcrumbs {
+  name?: string
+  page: string
+  timestamp: number | string
+}
+
+const breadcrumbsStack: Breadcrumbs[] = []
+const maxbreadcrumbs = 100
+const pushBreadcrumb = function(breadcrumb: ReportData) {
+
+  const behavior : Breadcrumbs = {
+    page: breadcrumb.page,
+    timestamp: breadcrumb.timestamp,
+    name: breadcrumb.subType
+  }
+
+  if (breadcrumbsStack.length === maxbreadcrumbs) {
+    breadcrumbsStack.shift()
+  }
+  breadcrumbsStack.push(behavior)
+}
+
+const initBreadcrumbs = function() {
+  const handler = function() {
+    userBehaviorSendHandle({
+      page: getPageInfo().pathname,
+      timestamp: Date.now(),
+      subType: mechanismType.HT
+    })
+  }
+  proxyFetch(undefined, handler)
+  proxyHttpRequest(undefined, handler)
 }
