@@ -6,5 +6,5 @@
  */
 export declare const nextTime: ((callback: IdleRequestCallback, options?: IdleRequestOptions | undefined) => number) & typeof requestIdleCallback;
 export declare function getPageURL(): string;
-export declare function onAfterLoad(callback: any): void;
+export declare function onAfterLoad(callback: () => any): void;
 export declare const getErrorUid: (input: string) => string;

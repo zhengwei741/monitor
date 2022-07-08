@@ -1,0 +1,1 @@
+export { WebSDK } from './core'
