@@ -36,5 +36,5 @@ const triggerHandlers = function(type, data) {
 }
 
 const instrumentConsole = function() {
-  global
+  fill(global, )
 }
