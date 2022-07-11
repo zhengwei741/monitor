@@ -1,12 +1,47 @@
+import { getGlobalObject } from '@monitor/utils'
+
+const global = getGlobalObject()
+
 export function getPageURL() {
-  return window.location.href 
+  return global.location.href 
+}
+
+export const getPageInfo = function() {
+  if (!('location' in global)) {
+    return {}
+  }
+  const { host, hostname, href, protocol, origin, port, pathname, search, hash } = global.location
+  const { width, height } = global.screen
+  const { language, userAgent } = global.navigator
+
+  return {
+    host,
+    hostname,
+    href,
+    protocol,
+    origin,
+    port,
+    pathname,
+    search,
+    hash,
+    title: document.title,
+    language: language.substring(0, 2),
+    userAgent,
+    winScreen: `${width}x${height}`,
+    docScreen: `${document.documentElement.clientWidth || document.body.clientWidth}x${
+      document.documentElement.clientHeight || document.body.clientHeight
+    }`,
+  };
 }
 
 export function onAfterLoad (callback) {
-  if (document.readyState === 'complete') {
+  if (!('document' in global)) {
+    return
+  }
+  if (global.document.readyState === 'complete') {
     setTimeout(callback)
   } else {
-    window.addEventListener('pageshow', callback, { once: true, capture: true });
+    global.addEventListener('pageshow', callback, { once: true, capture: true });
   }
 }
 
@@ -17,6 +52,6 @@ export function onAfterLoad (callback) {
  * 关于 requestIdleCallback 和  requestAnimationFrame 可以参考 https://www.cnblogs.com/cangqinglang/p/13877078.html
  */
 export const nextTime =
- window.requestIdleCallback ||
- window.requestAnimationFrame ||
- ((callback) => setTimeout(callback, 17))
+  global.requestIdleCallback ||
+  global.requestAnimationFrame ||
+  ((callback) => global.setTimeout(callback, 17))

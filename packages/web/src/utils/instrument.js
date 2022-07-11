@@ -1,28 +1,14 @@
-import { fill, getGlobalObject } from '@monitor/utils'
+// import { fill, getGlobalObject } from '@monitor/utils'
 
 const handlers = {}
-const instrumented = {}
-const global = getGlobalObject()
+// const global = getGlobalObject()
 
 export function addInstrumentationHandler(type, callback) {
   handlers[type] = handlers[type] || [];
   handlers[type].push(callback)
-  instrument(type)
 }
 
-export function instrument(type) {
-  if (instrumented[type]) {
-    return
-  }
-  instrumented[type] = true
-  switch (type) {
-    case 'console':
-      instrumentConsole()
-      break;
-  }
-}
-
-const triggerHandlers = function(type, data) {
+export const triggerHandlers = function(type, data) {
   if (!type || !handlers[type]) {
     return;
   }
@@ -35,6 +21,20 @@ const triggerHandlers = function(type, data) {
   }
 }
 
-const instrumentConsole = function() {
-  fill(global, )
-}
+// const instrumentConsole = function() {
+//   const types = ['error']
+//   // debug error info log
+//   types.forEach(level => {
+//     if (!level in global.console) {
+//       return
+//     }
+//     fill(global.console, level, (originalConsoleMethod) => {
+//       return function(...args) {
+//         triggerHandlers('console', { args, level })
+//         if (originalConsoleMethod) {
+//           originalConsoleMethod.apply(global.console, args)
+//         }
+//       }
+//     })
+//   })
+// }

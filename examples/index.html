@@ -16,53 +16,61 @@
     <!-- <img src="https://img0.baidu.com/it/u=3798217922,3880088897&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500"> -->
     <div id="app"></div>
   </body>
-  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
-  <script src="../lib/monitor.umd.js"></script>
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
+  <script src="../lib/monitor.umd.js"></script> -->
   <script>
-    monitor.init({
-      error: {
-        resource: true,
-        promise: true,
-        js: true,
-        vue: Vue
-      }
-    });
+    window.onerror = function(e) {
+      console.log(arguments, 'onerror')
+    }
+    window.addEventListener('error', function() {
+      console.log(arguments, 'addEventListener')
+    }, true)
+    console.log(as)
+    // console.log(asd)
+    // monitor.init({
+    //   error: {
+    //     resource: true,
+    //     promise: true,
+    //     js: true,
+    //     vue: Vue
+    //   }
+    // });
     // Vue.config.errorHandler = function(error, vm, lifecycleHook) {
     //   console.log(error)
     //   console.log(vm)
     //   console.log(lifecycleHook)
     // }
-    const app = new Vue({
-      el: '#app',
-      data() {
-        return {
-          app: 'appp'
-        }
-      },
-      template: `<div>{{ app }}</div>`,
-      created() {
-        // setTimeout(() => {
-        //   console.log(asd)
-        // }, 100)
-        // window.ss()
-        // throw new Error('xxx')
-        // this.in()
-      },
-      methods: {
-        in() {
-          if (window.Promise) {
-            return new Promise((resolve) => {
-              // 一段耗时的异步操作
-              // eee.eew();
-              // resolve('成功'); // 数据处理完成
-              throw new Error('custom');
-            }).then(
-              (res) => { console.log(res); }, // 成功
-            );
-          }
-        }
-      }
-    })
+    // const app = new Vue({
+    //   el: '#app',
+    //   data() {
+    //     return {
+    //       app: 'appp'
+    //     }
+    //   },
+    //   template: `<div>{{ app }}</div>`,
+    //   created() {
+    //     // setTimeout(() => {
+    //     //   console.log(asd)
+    //     // }, 100)
+    //     // window.ss()
+    //     // throw new Error('xxx')
+    //     // this.in()
+    //   },
+    //   methods: {
+    //     in() {
+    //       if (window.Promise) {
+    //         return new Promise((resolve) => {
+    //           // 一段耗时的异步操作
+    //           // eee.eew();
+    //           // resolve('成功'); // 数据处理完成
+    //           throw new Error('custom');
+    //         }).then(
+    //           (res) => { console.log(res); }, // 成功
+    //         );
+    //       }
+    //     }
+    //   }
+    // })
 
     // setTimeout(() => {
     //   new Promise(() => {
@@ -79,6 +87,7 @@
     //   event: true,
     // });
   </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.8.0-beta.2/vue.min.js"></script>
   <!-- <script src="monitor.umd.js"></script> -->
-  <script src="http://localhost:8080/static/js/54.js"></script>
+  <!-- <script src="http://localhost:8080/static/js/54.js"></script> -->
 </html>
