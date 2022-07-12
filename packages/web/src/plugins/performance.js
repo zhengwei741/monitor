@@ -1,5 +1,5 @@
 import { getFCP, getLCP, getFID, getCLS } from 'web-vitals'
-import { getPageURL, onAfterLoad } from '../utils'
+import { getPageURL, onAfterLoad, proxyHttpRequest, proxyFetch } from '../utils'
 
 // 白屏（FP）、灰屏（FCP）
 export const initFCP = function(webSDK) {
@@ -48,7 +48,22 @@ export const initCLS = function(webSDK) {
   })
 }
 export const initHttp = function(webSDK) {
-  console.log(1)
+  const onloadHandler = function(metrics) {
+    if (metrics.error || metrics.status < 400) {
+      delete metrics.response
+      delete metrics.body
+    }
+    webSDK.report({
+      ...metrics,
+      // http时长
+      duration: metrics.requestTime - metrics.responseTime,
+      pageURL: getPageURL(),
+      subType: 'http',
+      type: 'performance'
+    })
+  }
+  proxyHttpRequest(undefined, onloadHandler)
+  proxyFetch(undefined, onloadHandler)
 }
 export const observeTiming = function (webSDK) {
   onAfterLoad(() => {

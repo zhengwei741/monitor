@@ -1,5 +1,5 @@
 import { getGlobalObject } from '@monitor/utils'
-import { getPageInfo } from '../utils'
+import { getPageInfo, parseStackFrames, proxyHttpRequest, proxyFetch } from '../utils'
 
 const global = getGlobalObject()
 
@@ -20,44 +20,12 @@ function reportErrorHandle(errorMechanism = {}) {
   return finallyData
 }
 
-// 正则表达式，用以解析堆栈split后得到的字符串
-const FULL_MATCH =
-  /^\s*at (?:(.*?) ?\()?((?:file|https?|blob|chrome-extension|address|native|eval|webpack|<anonymous>|[-a-z]+:|.*bundle|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i;
-
-// 限制只追溯10个
-const STACKTRACE_LIMIT = 10;
-
-// 解析每一行
-function parseStackLine(line) {
-  const lineMatch = line.match(FULL_MATCH);
-  if (!lineMatch) return {};
-  const filename = lineMatch[2];
-  const functionName = lineMatch[1] || '';
-  const lineno = parseInt(lineMatch[3], 10) || undefined;
-  const colno = parseInt(lineMatch[4], 10) || undefined;
-  return {
-    filename,
-    functionName,
-    lineno,
-    colno,
-  };
-}
-// 解析错误堆栈
-function parseStackFrames(stack) {
-  // 无 stack 时直接返回
-  if (!stack) return [];
-  const frames = [];
-  for (const line of stack.split('\n').slice(1)) {
-    const frame = parseStackLine(line);
-    if (frame) {
-      frames.push(frame);
-    }
-  }
-  return frames.slice(0, STACKTRACE_LIMIT);
-}
-
 const errorTypes = {
-  resource: 'resource-error'
+  resource: 'resource-error',
+  js: 'js-error',
+  cs: 'cros-error',
+  pe: 'promise-error',
+  he: 'http-error'
 }
 
 export const initResourceError = function(websdk) {
@@ -74,7 +42,7 @@ export const initResourceError = function(websdk) {
       } else {
         src = target.currentSrc || target.src
       }
-      reportErrorHandle({
+      const finallyData = reportErrorHandle({
         errorId: `${errorTypes.resource}-${e.error.message}-${e.filename}`,
         message: e.error.message,
         stack: e.error.stack,
@@ -82,12 +50,94 @@ export const initResourceError = function(websdk) {
           src,
           html: target.outerHTML,
           tagName: target.tagName,
-        }
+        },
+        type: errorTypes.resource
       })
+      if (finallyData) {
+        websdk.report(finallyData)
+      }
     }
   }, true)
 }
 
+// 判断是 JS异常、静态资源异常、还是跨域异常
+const getErrorKey = (event) => {
+  const isJsError = event instanceof ErrorEvent
+  if (!isJsError) return errorTypes.resource
+  return event.message === 'Script error.' ? errorTypes.cs : mechanismType.JS
+};
+
+export const initjsError = function(websdk) {
+  if (!('document' in global)) {
+    return
+  }
+  global.document.addEventListener('error', (e) => {
+    if (e.error) {
+      e.preventDefault()
+      // 资源错误不在这上报
+      if (getErrorKey(e) === errorTypes.resource) {
+        return
+      }
+      const { lineno, colno , error } = e
+      const finallyData = reportErrorHandle({
+        errorId: `${errorTypes.js}-${error.message}-${error.filename}`,
+        message: error.message,
+        stack: error.stack,
+        meta: {
+          filename: error.filename,
+          lineno,
+          colno
+        },
+        type: errorTypes.js
+      })
+      if (finallyData) {
+        websdk.report(finallyData)
+      }
+    }
+  }, true)
+}
+
+export const initPromiseError = function(websdk) {
+  const oldOnunhandledrejection = global.onunhandledrejection
+
+  global.onunhandledrejection = function(e) {
+    const finallyData = reportErrorHandle({
+      stack: e.reason?.stack,
+      message: e.reason?.message,
+      errorId: `${errorTypes.pe}-${e.reason?.message}`,
+      type: errorTypes.pe
+    })
+    if (finallyData) {
+      websdk.report(finallyData)
+    }
+    if (oldOnunhandledrejection) {
+      oldOnunhandledrejection.apply(this, arguments)
+    }
+  }
+}
+
+export const initHttpError = function(websdk) {
+
+  const onloadHandler = function(metrics) {
+    const { status, response, statusText } = metrics
+    if (status < 400) {
+      const finallyData = reportErrorHandle({
+        ...metrics,
+        type: errorTypes.he,
+        errorId: `${errorTypes.he}-${response}-${statusText}`
+      })
+      if (finallyData) {
+        websdk.report(finallyData)
+      }
+    }
+  }
+
+  proxyHttpRequest(undefined, onloadHandler)
+  proxyFetch(undefined, onloadHandler)
+}
+
 export {
-  initResourceError
+  initResourceError,
+  initjsError,
+  initPromiseError
 }

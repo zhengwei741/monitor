@@ -19,13 +19,39 @@
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
   <script src="../lib/monitor.umd.js"></script> -->
   <script>
-    window.onerror = function(e) {
-      console.log(arguments, 'onerror')
+    window.addEventListener('unhandledrejection', (e) => {
+      console.log(e)
+      console.log('addEventListener')
+    })
+    window.onunhandledrejection = function(e) {
+      console.log(e)
+      console.log('onunhandledrejection')
     }
-    window.addEventListener('error', function() {
-      console.log(arguments, 'addEventListener')
-    }, true)
-    console.log(as)
+    new Promise(() => {
+      throw new Error('123')
+    })
+    // 能触发 unhandledrejection ，因为未显式处理
+    // Promise.reject('test').then()
+
+    // 能触发 unhandledrejection ，因为未显式处理
+    // Promise.reject('test').then(console.log)
+
+    // 不能触发 unhandledrejection ，因为已处理
+    // Promise.reject('test').then(console.log, console.log)
+
+    // 不能触发 unhandledrejection ，因为没处理，直接抛出异常 ??
+    // 实测可以触发
+    // Promise.reject('test')
+    // new Promise(() => {
+    //   throw new Error('ee')
+    // }).then(() => {})
+    // window.onerror = function(e) {
+    //   console.log(arguments, 'onerror')
+    // }
+    // window.addEventListener('error', function() {
+    //   console.log(arguments, 'addEventListener')
+    // }, true)
+    // console.log(as)
     // console.log(asd)
     // monitor.init({
     //   error: {
@@ -87,7 +113,7 @@
     //   event: true,
     // });
   </script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.8.0-beta.2/vue.min.js"></script>
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.8.0-beta.2/vue.min.js"></script> -->
   <!-- <script src="monitor.umd.js"></script> -->
   <!-- <script src="http://localhost:8080/static/js/54.js"></script> -->
 </html>

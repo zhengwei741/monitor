@@ -1,6 +1,6 @@
 export function markFunctionWrapped(wrapped, original) {
-  const proto = original.prototype || {};
-  wrapped.prototype = original.prototype = proto;
+  const proto = original.prototype || {}
+  wrapped.prototype = original.prototype = proto
 }
 
 export function fill(source, name, replacementFactory) {
@@ -17,4 +17,16 @@ export function fill(source, name, replacementFactory) {
     } catch(e) {}
   }
   source[name] = wrapped
+}
+
+const defaultFunctionName = '<anonymous>'
+export function getFunctionName(fn) {
+  try {
+    if (!fn || typeof fn !== 'function') {
+      return defaultFunctionName
+    }
+    return fn.name || defaultFunctionName
+  } catch (e) {
+    return defaultFunctionName
+  }
 }
