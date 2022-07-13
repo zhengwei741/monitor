@@ -1,40 +1,27 @@
-// import { fill, getGlobalObject } from '@monitor/utils'
+import { getFunctionName } from '@monitor/utils'
 
 const handlers = {}
-// const global = getGlobalObject()
 
-export function addInstrumentationHandler(type, callback) {
-  handlers[type] = handlers[type] || [];
-  handlers[type].push(callback)
+export function addInstrumentationHandler(type, handler) {
+  handlers[type] = handlers[type] || []
+  if (typeof handler !== 'function') {
+    return
+  }
+  if (handlers[type].findIndex(handler) !== -1) {
+    return
+  }
+  handlers[type].push(handler)
 }
 
-export const triggerHandlers = function(type, data) {
+export function triggerHandlers(type, data) {
   if (!type || !handlers[type]) {
-    return;
+    return
   }
   for (const handler of handlers[type] || []) {
     try {
-      handler(data);
+      handler(data)
     } catch (e) {
-      console.log(e)
+      console.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`)
     }
   }
 }
-
-// const instrumentConsole = function() {
-//   const types = ['error']
-//   // debug error info log
-//   types.forEach(level => {
-//     if (!level in global.console) {
-//       return
-//     }
-//     fill(global.console, level, (originalConsoleMethod) => {
-//       return function(...args) {
-//         triggerHandlers('console', { args, level })
-//         if (originalConsoleMethod) {
-//           originalConsoleMethod.apply(global.console, args)
-//         }
-//       }
-//     })
-//   })
-// }

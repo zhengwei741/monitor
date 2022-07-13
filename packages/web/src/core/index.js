@@ -7,8 +7,14 @@ import {
   observeTiming,
   initFCP,
   initFID,
-  observeResResourceFlow
-} from './plugins'
+  observeResResourceFlow,
+
+  initResourceError,
+  initjsError,
+  initPromiseError,
+  initHttpError,
+  initVueError
+} from '../plugins'
 
 const defaultPlugins = [
   initLCP,
@@ -17,11 +23,17 @@ const defaultPlugins = [
   observeTiming,
   initFCP,
   initFID,
-  observeResResourceFlow
+  observeResResourceFlow,
+
+  initResourceError,
+  initjsError,
+  initPromiseError,
+  initHttpError,
+  initVueError
 ]
 
-export class WebSDK extends Core {
-  constructor(options) {
+export default class WebSDK extends Core {
+  constructor(options = {}) {
     super(options)
     const { url, appId, userId } = options
     // 基本信息

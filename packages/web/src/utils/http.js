@@ -1,39 +1,21 @@
-import { fill, getGlobalObject, getFunctionName } from '@monitor/utils'
+import { fill, getGlobalObject, isFunction } from '@monitor/utils'
+import { addInstrumentationHandler, triggerHandlers } from './instrument'
 
 const global = getGlobalObject()
 
-const handlers = {}
-
-function addHandlers(type, handler) {
-  const handlerList = handlers[type] || []
-  if (typeof handler !== 'function') {
-    return
-  }
-  if (handlerList.find(handler) !== -1) {
-    return
-  }
-  handlerList.push(handler)
-}
-
-function triggerHandlers(type, data) {
-  if (!type || !handlers[type]) {
-    return
-  }
-  for (const handler of handlers[type] || []) {
-    try {
-      handler(data)
-    } catch (e) {
-      console.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`)
-    }
-  }
+const instrumentType = {
+  SH: 'sendHandler',
+  LH: 'loadHandler',
+  FSH: 'fetch-sendHandler',
+  FLH: 'fetch-loadHandler',
 }
 
 export function proxyHttpRequest(sendHandler, loadHandler) {
   if (!('XMLHttpRequest' in global)) {
     return
   }
-  addHandlers('sendHandler', sendHandler)
-  addHandlers('loadHandler', loadHandler)
+  addInstrumentationHandler(instrumentType.SH, sendHandler)
+  addInstrumentationHandler(instrumentType.LH, loadHandler)
 
   if (!global.oXMLHttpRequest) {
     global.oXMLHttpRequest = global.XMLHttpRequest
@@ -50,7 +32,7 @@ export function proxyHttpRequest(sendHandler, loadHandler) {
 
       const onreadystatechangeHandler = function () {
         const { status, statusText, response } = xhr
-        triggerHandlers('loadHandler', {
+        triggerHandlers(instrumentType.LH, {
           ...httpMetrics,
           status,
           statusText,
@@ -59,7 +41,7 @@ export function proxyHttpRequest(sendHandler, loadHandler) {
         })
       }
 
-      if ('onloadend' in xhr && typeof xhr.onloadend === 'function') {
+      if ('onloadend' in xhr && isFunction(xhr.onloadend)) {
         fill(xhr, 'onloadend', function(original) {
           return function(...arsg) {
             onreadystatechangeHandler()
@@ -80,7 +62,7 @@ export function proxyHttpRequest(sendHandler, loadHandler) {
       const xhr = this
       httpMetrics.body = args[0]
       httpMetrics.requestTime = Date.now()
-      triggerHandlers('sendHandler', httpMetrics)
+      triggerHandlers(instrumentType.SH, httpMetrics)
       originalSendMethod.apply(xhr, args)
     }
   })
@@ -91,21 +73,19 @@ export function proxyFetch(sendHandler, loadHandler) {
     return
   }
 
-  addHandlers('fetch-sendHandler', sendHandler)
-  addHandlers('fetch-loadHandler', loadHandler)  
+  addInstrumentationHandler(instrumentType.FSH, sendHandler)
+  addInstrumentationHandler(instrumentType.FLH, loadHandler)  
 
   fill(global, 'fetch', function(originaFetch) {
     return function(...args) {
       let metrics = {
         args,
-        fetchData: {
-          method: getFetchMethod(args),
-          url: getFetchUrl(args),
-        },
-        startTimestamp: Date.now(),
+        method: getFetchMethod(args),
+        url: getFetchUrl(args),
+        requestTime: Date.now(),
       }
 
-      triggerHandlers('fetch-sendHandler', {
+      triggerHandlers(instrumentType.FSH, {
         ...metrics
       })
       return originaFetch.apply(global, args).then(
@@ -118,11 +98,11 @@ export function proxyFetch(sendHandler, loadHandler) {
             response: await res.text(),
             responseTime: Date.now(),
           }
-          triggerHandlers('fetch-loadHandler', { ...metrics })
+          triggerHandlers(instrumentType.FLH, { ...metrics })
           return response
         },
         (error) => {
-          triggerHandlers('fetch-loadHandler', {
+          triggerHandlers(instrumentType.FLH, {
             ...metrics,
             responseTime: Date.now(),
             error,
@@ -132,14 +112,6 @@ export function proxyFetch(sendHandler, loadHandler) {
       )
     }
   })
-}
-
-function isInstanceOf(wat, base) {
-  try {
-    return wat instanceof base;
-  } catch (_e) {
-    return false;
-  }
 }
 
 function getFetchMethod(fetchArgs) {

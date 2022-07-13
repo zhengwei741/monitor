@@ -1,3 +1,5 @@
+import { isFunction } from '@monitor/utils'
+
 export function markFunctionWrapped(wrapped, original) {
   const proto = original.prototype || {}
   wrapped.prototype = original.prototype = proto
@@ -11,7 +13,7 @@ export function fill(source, name, replacementFactory) {
 
   const wrapped = replacementFactory(original)
 
-  if (typeof wrapped === 'function') {
+  if (isFunction(wrapped)) {
     try {
       markFunctionWrapped(wrapped, original)
     } catch(e) {}

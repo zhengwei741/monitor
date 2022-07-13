@@ -2,14 +2,13 @@
   "name": "monitor",
   "version": "1.0.0",
   "description": "前端监控jssdk",
-  "main": "lib/monitor.cjs.js",
-  "module": "lib/monitor.esm.js",
-  "jsdelivr": "lib/monitor.umd.js",
   "scripts": {
     "lint": "eslint --ext .js,.ts src",
     "dev": "rollup --config build/rollup.config.dev.js -w",
     "build": "rollup --config build/rollup.config.build.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build:web": "rollup --config packages/web/rollup.config.js",
+    "dev:web": "rollup --config build/rollup.config.dev.js -w"
   },
   "repository": {
     "type": "git",
@@ -50,6 +49,8 @@
     "rollup-plugin-uglify": "^6.0.4"
   },
   "workspaces": [
-    "./packages/*"
+    "packages\\core",
+    "packages\\utils",
+    "packages\\web"
   ]
 }

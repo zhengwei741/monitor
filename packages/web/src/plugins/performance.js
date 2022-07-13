@@ -1,6 +1,15 @@
 import { getFCP, getLCP, getFID, getCLS } from 'web-vitals'
 import { getPageURL, onAfterLoad, proxyHttpRequest, proxyFetch } from '../utils'
 
+// 兼容判断
+const supported = {
+  performance: !!window.performance,
+  getEntriesByType: !!(window.performance && performance.getEntriesByType),
+  PerformanceObserver: 'PerformanceObserver' in window,
+  MutationObserver: 'MutationObserver' in window,
+  PerformanceNavigationTiming: 'PerformanceNavigationTiming' in window,
+}
+
 // 白屏（FP）、灰屏（FCP）
 export const initFCP = function(webSDK) {
   onAfterLoad(() => {
@@ -56,7 +65,7 @@ export const initHttp = function(webSDK) {
     webSDK.report({
       ...metrics,
       // http时长
-      duration: metrics.requestTime - metrics.responseTime,
+      duration: metrics.responseTime - metrics.requestTime,
       pageURL: getPageURL(),
       subType: 'http',
       type: 'performance'

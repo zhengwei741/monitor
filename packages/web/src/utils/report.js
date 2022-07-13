@@ -1,5 +1,5 @@
 import { getGlobalObject } from '@monitor/utils'
-import { nextTime } from './index'
+import { nextTime } from './nextTime'
 
 const global = getGlobalObject()
 // 上传缓存
@@ -7,25 +7,30 @@ let caches = []
 // 上传缓存上限
 const max = 5
 // 上传定时
-const timer = null
+let timer = null
 // 上报url
 let baseUrl = ''
 
-const sendBeacon = global.sendBeacon ? 
-  (url, data) => {
-    if (url && data) {
-      global.navigator.sendBeacon(url, JSON.stringify(data))
-    }
-  } : 
-  (url, data) => {
-    if ('oXMLHttpRequest' in global && typeof global.oXMLHttpRequest === 'function') {
-      // 使用原始XMLHttpRequest上传
-      const XMLHttpRequest = global.oXMLHttpRequest ? global.oXMLHttpRequest : global.XMLHttpRequest
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', url)
-      xhr.send(JSON.stringify(data))
-    }
-  }
+// const sendBeacon = global.sendBeacon ? 
+//   (url, data) => {
+//     if (url && data) {
+//       global.navigator.sendBeacon(url, JSON.stringify(data))
+//     }
+//   } : 
+//   (url, data) => {
+//     if ('oXMLHttpRequest' in global && typeof global.oXMLHttpRequest === 'function') {
+//       // 使用原始XMLHttpRequest上传
+//       const XMLHttpRequest = global.oXMLHttpRequest ? global.oXMLHttpRequest : global.XMLHttpRequest
+//       const xhr = new XMLHttpRequest()
+//       xhr.open('POST', url)
+//       xhr.send(JSON.stringify(data))
+//     }
+//   }
+
+const sendBeacon = (url, data) => {
+  console.log(url, 'url')
+  console.log(data, 'data')
+} 
 
 function send() {
   if (caches.length) {

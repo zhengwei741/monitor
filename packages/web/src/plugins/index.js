@@ -8,4 +8,10 @@ export {
   observeResResourceFlow,
 } from './performance'
 
-export { error } from './error'
+export {
+  initResourceError,
+  initjsError,
+  initPromiseError,
+  initHttpError,
+  initVueError
+} from './error'

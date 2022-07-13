@@ -18,18 +18,29 @@
   </body>
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
   <script src="../lib/monitor.umd.js"></script> -->
+  <script src="../lib/monitor-web.umd.js"></script>
   <script>
-    window.addEventListener('unhandledrejection', (e) => {
-      console.log(e)
-      console.log('addEventListener')
+    new monitorWeb({
+      url: 'url',
+      appId: 'appId',
+      userId: 'userId'
     })
-    window.onunhandledrejection = function(e) {
-      console.log(e)
-      console.log('onunhandledrejection')
-    }
-    new Promise(() => {
-      throw new Error('123')
-    })
+
+    console.log(asd)
+    // setTimeout(() => {
+    //   fetch('http://www.baidu.com')
+    // }, 1000)
+    // window.addEventListener('unhandledrejection', (e) => {
+    //   console.log(e)
+    //   console.log('addEventListener')
+    // })
+    // window.onunhandledrejection = function(e) {
+    //   console.log(e)
+    //   console.log('onunhandledrejection')
+    // }
+    // new Promise(() => {
+    //   throw new Error('123')
+    // })
     // 能触发 unhandledrejection ，因为未显式处理
     // Promise.reject('test').then()
 
@@ -113,7 +124,7 @@
     //   event: true,
     // });
   </script>
-  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.8.0-beta.2/vue.min.js"></script> -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.8.0-beta.2/vue.min.js"></script>
   <!-- <script src="monitor.umd.js"></script> -->
   <!-- <script src="http://localhost:8080/static/js/54.js"></script> -->
 </html>

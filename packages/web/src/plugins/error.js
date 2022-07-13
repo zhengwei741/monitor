@@ -25,7 +25,8 @@ const errorTypes = {
   js: 'js-error',
   cs: 'cros-error',
   pe: 'promise-error',
-  he: 'http-error'
+  he: 'http-error',
+  ve: 'vue-error'
 }
 
 export const initResourceError = function(websdk) {
@@ -43,13 +44,11 @@ export const initResourceError = function(websdk) {
         src = target.currentSrc || target.src
       }
       const finallyData = reportErrorHandle({
-        errorId: `${errorTypes.resource}-${e.error.message}-${e.filename}`,
-        message: e.error.message,
-        stack: e.error.stack,
+        errorId: `${errorTypes.resource}-${src}-${target.tagName}`,
         meta: {
-          src,
+          url: src,
           html: target.outerHTML,
-          tagName: target.tagName,
+          type: target.tagName,
         },
         type: errorTypes.resource
       })
@@ -64,14 +63,14 @@ export const initResourceError = function(websdk) {
 const getErrorKey = (event) => {
   const isJsError = event instanceof ErrorEvent
   if (!isJsError) return errorTypes.resource
-  return event.message === 'Script error.' ? errorTypes.cs : mechanismType.JS
-};
+  return event.message === 'Script error.' ? errorTypes.cs : errorTypes.js
+}
 
 export const initjsError = function(websdk) {
-  if (!('document' in global)) {
+  if (!('addEventListener' in global)) {
     return
   }
-  global.document.addEventListener('error', (e) => {
+  global.addEventListener('error', (e) => {
     if (e.error) {
       e.preventDefault()
       // 资源错误不在这上报
@@ -136,8 +135,71 @@ export const initHttpError = function(websdk) {
   proxyFetch(undefined, onloadHandler)
 }
 
-export {
-  initResourceError,
-  initjsError,
-  initPromiseError
+
+const classifyRE = /(?:^|[-_])(\w)/g
+const classify = (str) =>
+  str.replace(classifyRE, (c) => c.toUpperCase()).replace(/[-_]/g, "")
+
+const formatComponentName = function (vm, includeFile) {
+  if (!vm) {
+    return "<Anonymous>"
+  }
+  if (vm.$root === vm) {
+    return "<Root>"
+  }
+
+  const options = vm.$options
+  let name = options.name || options._componentTag
+  const file = options.__file
+  if (!name && file) {
+    const match = file.match(/([^/\\]+)\.vue$/)
+    if (match) {
+      name = match[1]
+    }
+  }
+
+  return (
+    (name ? `<${classify(name)}>` : "<Anonymous>") +
+    (file && includeFile ? `at ${file}` : "")
+  )
+}
+
+const generateComponentTrace = function (vm) {
+  if ((vm?.__isVue || vm?._isVue) && vm.$parent) {
+    const trace = []
+    while (vm) {
+      trace.push(formatComponentName(vm))
+      vm = vm.$parent
+    }
+
+    return trace.reverse().join('-->')
+  }
+  return formatComponentName(vm, true)
+}
+export const initVueError = function(websdk) {
+  if (websdk.vue) {
+    vue.config.errorHandler = function (
+      error,
+      vm,
+      lifecycleHook
+    ) {
+      const reportData = {
+        type: errorTypes.ve,
+        errorUid: `${errorTypes.ve}-${error.message}-${error.stack}`,
+        message: error.message,
+        stack: error.stack,
+        meta: {
+          lifecycleHook,
+          componentName: formatComponentName(vm),
+          trace: vm ? generateComponentTrace(vm) : "",
+          vm,
+          error
+        }
+      }
+      const finallyData = reportErrorHandle(reportData)
+      if (finallyData) {
+        websdk.report(finallyData)
+      }
+    }
+  }
 }

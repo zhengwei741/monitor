@@ -1,1 +1,3 @@
-export { WebSDK } from './core'
+import WebSDK from './core'
+
+export default WebSDK
