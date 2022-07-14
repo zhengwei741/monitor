@@ -2,6 +2,7 @@ import { getPageInfo } from '../utils/page'
 import { proxyHash, proxyHistory } from '../utils/history'
 import { proxyHttpRequest, proxyFetch } from '../utils/http'
 import { getGlobalObject, isFunction } from '@monitor/utils'
+import { proxyDomClick } from '../utils/dom'
 
 let breadcrumbsStack = []
 const maxbreadcrumbs = 100
@@ -33,7 +34,6 @@ export function initBreadcrumb(websdk) {
   // ajax 请求行为
   instrumentAjax()
   // 用户自定义事件
-  // addBreadcrumb
 }
 
 function init(callBlack) {
@@ -63,39 +63,23 @@ function instrumentRouter() {
   proxyHistory(handler)
 }
 
-const mountList = ['div', 'li']
 function instrumentClick() {
-  const global = getGlobalObject()
-
-  if (!('document' in global)) {
-    return
-  }
-
-  ['mousedown', 'touchstart'].forEach(eventType => {
-    let time = null
-    global.document.addEventListener(eventType, function() {
-      clearTimeout(timer)
-      time = global.setTimeout(() => {
-        let target = e.path?.find((x) => mountList.includes(x.tagName?.toLowerCase()))
-        // 不支持 path 就再判断 target
-        target = target || (mountList.includes(e.target.tagName?.toLowerCase()) ? e.target : undefined)
-        if (!target) return
-        const { top, left } = target.getBoundingClientRect()
-        addBreadcrumb({
-          type: 'user-click',
-          top,
-          left,
-          eventType,
-          target: target.tagName,
-          outerHTML: target.outerHTML,
-          innerHTML: target.innerHTML,
-          width: target.offsetWidth,
-          height: target.offsetHeight,
-          startTime: e.timeStamp,
-        })
-      }, 500)
+  const handler = function({ e, target, eventType }) {
+    const { top, left } = target.getBoundingClientRect()
+    addBreadcrumb({
+      type: 'user-click',
+      top,
+      left,
+      eventType,
+      target: target.tagName,
+      outerHTML: target.outerHTML,
+      innerHTML: target.innerHTML,
+      width: target.offsetWidth,
+      height: target.offsetHeight,
+      startTime: e.timeStamp,
     })
-  })
+  }
+  proxyDomClick(handler)
 }
 
 function instrumentAjax() {

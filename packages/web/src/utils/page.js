@@ -31,5 +31,13 @@ export const getPageInfo = function() {
     docScreen: `${document.documentElement.clientWidth || document.body.clientWidth}x${
       document.documentElement.clientHeight || document.body.clientHeight
     }`,
-  };
+  }
+}
+
+// 返回 OI 用户来路信息
+export const getOriginInfo = () => {
+  return {
+    referrer: global.document.referrer,
+    type: global.performance?.navigation.type || '',
+  }
 }

@@ -2,14 +2,14 @@ import { getGlobalObject, fill } from '@monitor/utils'
 
 const global = getGlobalObject()
 
-function wrHistory() {
+export function wrHistory() {
   if ('history' in global) {
     const dispatchEvent = function(type) {
       const e = new Event(type)
       global.dispatchEvent(e)
     }
     ['pushState', 'replaceState'].forEach(type => {
-      fill(global, type, function(original) {
+      fill(global.history, type, function(original) {
         return function(this) {
           const rv = original.apply(this, arguments)
           dispatchEvent(type)
