@@ -23,7 +23,7 @@ export function proxyDomClick(handler) {
   }
 
   ['mousedown', 'touchstart'].forEach(eventType => {
-    global.document.addEventListener(eventType, function() {
+    global.document.addEventListener(eventType, function(e) {
       clearTimeout(timer)
       timer = global.setTimeout(() => {
         let target = e.path?.find((x) => NODE_LIST.includes(x.tagName?.toLowerCase()))

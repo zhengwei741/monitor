@@ -13,7 +13,16 @@ import {
   initjsError,
   initPromiseError,
   initHttpError,
-  initVueError
+  initVueError,
+
+  initPageInfo,
+  initRouterChange,
+  initClickRecord,
+  initHttpRecord,
+  initPV,
+  initStayTime,
+
+  initBreadcrumb
 } from '../plugins'
 
 const defaultPlugins = [
@@ -29,7 +38,16 @@ const defaultPlugins = [
   initjsError,
   initPromiseError,
   initHttpError,
-  initVueError
+  initVueError,
+
+  initPageInfo,
+  initRouterChange,
+  initClickRecord,
+  initHttpRecord,
+  initPV,
+  initStayTime,
+
+  initBreadcrumb
 ]
 
 export default class WebSDK extends Core {
@@ -49,8 +67,9 @@ export default class WebSDK extends Core {
   }
 
   report(data = {}, immediate = false) {
+    const { baseUrl } = this
     report(
-      this.baseUrl,
+      baseUrl,
       {
         appId: this.appId,
         userId: this.userId,

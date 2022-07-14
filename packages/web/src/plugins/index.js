@@ -15,3 +15,16 @@ export {
   initHttpError,
   initVueError
 } from './error'
+
+export {
+  initPageInfo,
+  initRouterChange,
+  initClickRecord,
+  initHttpRecord,
+  initPV,
+  initStayTime
+} from './behavior'
+
+export {
+  initBreadcrumb
+} from './breadcrumb'

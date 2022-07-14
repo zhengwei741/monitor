@@ -1,8 +1,8 @@
-import { getPageInfo } from '../utils/page'
-import { proxyHash, proxyHistory } from '../utils/history'
-import { proxyHttpRequest, proxyFetch } from '../utils/http'
+import { getPageInfo } from '../utils'
+import { proxyHash, proxyHistory } from '../utils'
+import { proxyHttpRequest, proxyFetch } from '../utils'
 import { getGlobalObject, isFunction } from '@monitor/utils'
-import { proxyDomClick } from '../utils/dom'
+import { proxyDomClick } from '../utils'
 
 let breadcrumbsStack = []
 const maxbreadcrumbs = 100
