@@ -19,6 +19,7 @@ function chrome(line) {
   }
 }
 
+// chrome ....
 const defaultParser = [chrome]
 
 export const parseStackFrames = function(stack) {

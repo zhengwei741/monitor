@@ -7,8 +7,7 @@
     "dev": "rollup --config build/rollup.config.dev.js -w",
     "build": "rollup --config build/rollup.config.build.js",
     "prepare": "husky install",
-    "build:web": "rollup --config packages/web/rollup.config.js",
-    "dev:web": "rollup --config build/rollup.config.dev.js -w"
+    "build:browser": "rollup --config packages/browser/rollup.config.js"
   },
   "repository": {
     "type": "git",
