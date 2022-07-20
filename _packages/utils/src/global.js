@@ -20,3 +20,10 @@ export function isNodeEnv() {
     Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]'
   );
 }
+
+export function getGlobalSingleton(name, creator) {
+  const global = getGlobalObject()
+  const __MONITOR__ = (global.__MONITOR__ = global.__MONITOR__ || {})
+  const singleton = __MONITOR__[name] || (__MONITOR__[name] = creator())
+  return singleton
+}

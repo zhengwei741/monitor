@@ -1,8 +1,11 @@
 {
-  "name": "@monitor/core",
+  "name": "@monitor/web",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/monitor-web.cjs.js",
+  "module": "lib/monitor-web.esm.js",
+  "jsdelivr": "lib/monitor-web.umd.js",
+  "type": "module",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

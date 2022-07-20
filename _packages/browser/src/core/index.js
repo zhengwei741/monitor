@@ -1,5 +1,6 @@
 import { Core } from '@monitor/core'
-import { report } from '../utils/report'
+import { supportsFetch } from '@monitor/utils'
+
 import {
   initLCP,
   initCLS,
@@ -52,30 +53,25 @@ const defaultPlugins = [
 
 export default class WebSDK extends Core {
   constructor(options = {}) {
+    options.transport = supportsFetch()
+
     super(options)
-    const { url, appId, userId } = options
-    // 基本信息
-    this.baseUrl = url
-    this.appId = appId
-    this.userId = userId
 
-    if (options.defaultPlugins === undefined) {
-      options.defaultPlugins = defaultPlugins
-    }
-    // 安装插件
-    options.defaultPlugins.forEach(plugin => this.use(plugin))
+    this.callPlugins()
   }
 
-  report(data = {}, immediate = false) {
-    const { baseUrl } = this
-    report(
-      baseUrl,
-      {
-        appId: this.appId,
-        userId: this.userId,
-        ...data
-      },
-      immediate
-    )
-  }
+  // report(data = {}, immediate = false) {
+  //   const { baseUrl } = this
+  //   report(
+  //     baseUrl,
+  //     {
+  //       appId: this.appId,
+  //       userId: this.userId,
+  //       ...data
+  //     },
+  //     immediate
+  //   )
+  // }
 }
+
+WebSDK.installAll(defaultPlugins)
