@@ -7,10 +7,10 @@ const PREFIX = 'Monitor Logger '
 const global = getGlobalObject<Window | any>()
 
 type LoggerMethod = (...args: unknown[]) => void
-type LoggerConsoleMethods = Record<typeof CONSOLE_LEVELS[number], LoggerMethod>;
+type LoggerConsoleMethods = Record<typeof CONSOLE_LEVELS[number], LoggerMethod>
 interface Logger extends LoggerConsoleMethods {
-  disable(): void;
-  enable(): void;
+  disable(): void
+  enable(): void
 }
 
 function makeLogger (): Logger {
@@ -41,7 +41,7 @@ function makeLogger (): Logger {
   return logger as Logger
 }
 
-const logger = getGlobalSingleton('logger', makeLogger) as Logger
+let logger: Logger = getGlobalSingleton('logger', makeLogger)
 
 export {
   logger

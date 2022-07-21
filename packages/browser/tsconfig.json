@@ -5,5 +5,7 @@
 
   "compilerOptions": {
     // package-specific options
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   }
 }

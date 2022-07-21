@@ -2,9 +2,9 @@ import { Event } from './event'
 import { Breadcrumb } from './breadcrumb'
 import { Plugin } from './plugin'
 import { StackParserFn } from './stacktrace'
-import { Sender } from './sender'
+import { CreaterSender } from './sender'
 
-export interface InitOptions {
+export interface InitOptions extends HooksTypes{
   // 
   appKey: string
   // DSN告诉 SDK 将事件发送到哪里 不存在，SDK 将不会发送任何事件。
@@ -18,16 +18,18 @@ export interface InitOptions {
   // 指定此 SDK 是否应向 Sentry 发送事件。
   enabled?: boolean
   //
-  sender? : Sender
+  sender: CreaterSender
   //
   plugins: Plugin[]
 
-  stackParser?: StackParserFn
+  stackParser: StackParserFn
+
+  buffSize: number
 }
 
 export interface HooksTypes {
   // 此函数使用 SDK 特定的事件对象调用，并且可以返回修改后的事件对象或不返回任何内容以跳过报告事件。
-  beforeSend: (event: Event) => {},
+  beforeSend?: (event: Event) => {},
   // 在将面包屑添加到范围之前，使用特定于 SDK 的面包屑对象调用此函数。
-  beforeBreadcrumb: (breadcrumb: Breadcrumb) => {}
+  beforeBreadcrumb?: (breadcrumb: Breadcrumb) => {}
 }

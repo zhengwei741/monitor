@@ -14,7 +14,6 @@ export interface MonitorGlobal {
   __MONITOR__: {
     logger?: any
     breadcrumb?: any
-    plugins?: any
   }
 }
 
