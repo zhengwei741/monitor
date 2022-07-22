@@ -1,3 +1,6 @@
+import { Logger } from '@monitor/utils'
+import { Breadcrumbs } from '@monitor/types'
+
 const fallbackGlobalObject = {}
 
 export function getGlobalObject<T>(): T & MonitorGlobal {
@@ -12,14 +15,14 @@ export function getGlobalObject<T>(): T & MonitorGlobal {
 
 export interface MonitorGlobal {
   __MONITOR__: {
-    logger?: any
-    breadcrumb?: any
+    logger?: Logger
+    breadcrumbs?: Breadcrumbs
   }
 }
 
 export function getGlobalSingleton(
   name: keyof MonitorGlobal['__MONITOR__'],
-  creater: () => unknown
+  creater: (...args: any[]) => any
 ) {
   const global = getGlobalObject() as MonitorGlobal
   const __MONITOR__ = global.__MONITOR__ || (global.__MONITOR__ = {})

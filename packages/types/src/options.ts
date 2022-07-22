@@ -3,6 +3,7 @@ import { Breadcrumb } from './breadcrumb'
 import { Plugin } from './plugin'
 import { StackParserFn } from './stacktrace'
 import { CreaterSender } from './sender'
+import { SdkInfo } from './sdkInfo'
 
 export interface InitOptions extends HooksTypes{
   // 
@@ -25,6 +26,8 @@ export interface InitOptions extends HooksTypes{
   stackParser: StackParserFn
 
   buffSize: number
+
+  sdkInfo?: SdkInfo
 }
 
 export interface HooksTypes {

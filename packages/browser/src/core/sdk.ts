@@ -1,5 +1,5 @@
 import { SDK } from '@monitor/core'
-import { Plugin, SdkInfo } from '@monitor/types'
+import { Plugin } from '@monitor/types'
 import { supportsFetch } from '@monitor/utils'
 import { BrowserInitOptions } from '../types/index'
 import { stackParser } from './stack-parsers'
@@ -10,11 +10,6 @@ import Package from '../../package.json'
 const defalutPlugins: Plugin[] = []
 
 export class BrowserSDK extends SDK<BrowserInitOptions> {
-  private sdkInfo: SdkInfo = {
-    name: Package.name,
-    version: Package.version
-  }
-
   constructor(options: BrowserInitOptions) {
     if (options.debug === true) {
       logger.enable()
@@ -26,8 +21,11 @@ export class BrowserSDK extends SDK<BrowserInitOptions> {
 
     options.sender = supportsFetch() ? createFetchSender : createXHRSender
 
+    options.sdkInfo = {
+      name: Package.name,
+      version: Package.version,
+      plugins: options.plugins.map(plugin => plugin.name)
+    }
     super(options)
-
-    this.sdkInfo.plugins = options.plugins.map(plugin => plugin.name)
   }
 }

@@ -6,3 +6,8 @@ export interface Breadcrumb {
   data?: { [key: string]: any }
   timestamp?: number
 }
+
+export interface Breadcrumbs {
+  addBreadcrumb: (breadcrumb: Breadcrumb) => void
+  getStack: () => Breadcrumb[]
+}

@@ -8,7 +8,7 @@ const global = getGlobalObject<Window | any>()
 
 type LoggerMethod = (...args: unknown[]) => void
 type LoggerConsoleMethods = Record<typeof CONSOLE_LEVELS[number], LoggerMethod>
-interface Logger extends LoggerConsoleMethods {
+export interface Logger extends LoggerConsoleMethods {
   disable(): void
   enable(): void
 }

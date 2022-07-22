@@ -1,21 +1,38 @@
 import { Sender, CreaterSenderOptions, RequestData, Event } from '@monitor/types'
-import { getGlobalObject } from '@monitor/utils'
+import { makePromiseBuffer, PromiseBuffer, MonitorError, getTimestamp } from '@monitor/utils'
 
-const global = getGlobalObject()
+const DEFALUT_BUFFSIZE = 30
 
 export function createrSender(
   makeRequest: (requestData: RequestData) => Promise<any>,
   options?: CreaterSenderOptions
 ): Sender {
-  // TODO
-  const send = function(event: Event) {
+  const buffer: PromiseBuffer<void> = makePromiseBuffer(options?.buffSize || DEFALUT_BUFFSIZE)
+
+  const send = function(event: Event): PromiseLike<void> {
     const requestData: RequestData = {
       body: event
     }
-    return makeRequest(requestData)
+
+    const requestTask = function(): PromiseLike<void> {
+      return makeRequest(requestData)
+    }
+    return buffer
+      .add(requestTask)
+      .then(
+        result => result,
+        error => {
+          if (error instanceof MonitorError) {
+            return Promise.resolve()
+          } else {
+            throw error
+          }
+        }
+      )
   }
-  const flush = function() {
-  }
+
+  const flush = (timeout?: number): PromiseLike<boolean> => buffer.drain(timeout)
+
   return {
     send,
     flush

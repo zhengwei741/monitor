@@ -1,6 +1,6 @@
 import { Event } from './event'
 export interface Sender {
-  send: (event: Event) => Promise<any>
+  send: (event: Event) => PromiseLike<any>
   flush: () => void
 }
 

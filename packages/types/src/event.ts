@@ -1,12 +1,9 @@
 import { SdkInfo } from './sdkInfo'
 import { Breadcrumb } from './breadcrumb'
-import { Exception } from './exception'
+import { Metrics } from './metrics'
 
 export interface Event {
-  exception?: {
-    values: Exception[]
-  }
-  platform?: string
+  data?: Metrics
   sdkInfo?: SdkInfo
   event_id?: string
   timestamp?: number
