@@ -26,6 +26,12 @@ export function createXHRSender(options: CreaterSenderOptions) {
       const xhr = new XMLHttpRequest()
 
       xhr.open('POST', options.url)
+
+      for (const header in requestData.headers) {
+        if (Object.prototype.hasOwnProperty.call(requestData.headers, header)) {
+          xhr.setRequestHeader(header, requestData.headers[header]);
+        }
+      }
   
       xhr.addEventListener('error', reject)
   

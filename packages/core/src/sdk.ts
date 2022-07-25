@@ -7,8 +7,6 @@ export class SDK<O extends InitOptions> {
 
   protected dsn: string
 
-  protected appKey: string = ''
-
   protected plugins: {[key : string]: any} = {}
 
   protected _sender: Sender
@@ -23,6 +21,9 @@ export class SDK<O extends InitOptions> {
 
     if (!options.dsn) {
       throw new MonitorError('dsn 未配置')
+    }
+    if (!options.appKey) {
+      throw new MonitorError('appKey 未配置')
     }
 
     this.dsn = options.dsn
@@ -54,6 +55,10 @@ export class SDK<O extends InitOptions> {
     }
   }
 
+  get appKey() {
+    return this._options.appKey
+  }
+
   captureException() {
     // this.sender.send()
   }
@@ -73,6 +78,7 @@ export class SDK<O extends InitOptions> {
   }
 
   addBreadcrumb(breadcrumb: Breadcrumb) {
-    this.breadcrumbs?.addBreadcrumb(breadcrumb)
+    breadcrumb.timestamp = getTimestamp()
+    this.breadcrumbs.addBreadcrumb(breadcrumb)
   }
 }

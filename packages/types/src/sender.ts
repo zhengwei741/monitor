@@ -1,15 +1,17 @@
 import { Event } from './event'
 export interface Sender {
-  send: (event: Event) => PromiseLike<any>
+  send: SendFn
   flush: () => void
 }
+
+export type SendFn = (event: Event) => PromiseLike<any>
 
 export type CreaterSender = (options: CreaterSenderOptions) => Sender
 
 export interface RequestData {
   method?: string
   body: any
-  headers?: any
+  headers?: { [key: string]: string }
 }
 
 export interface CreaterSenderOptions {

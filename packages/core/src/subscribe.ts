@@ -4,7 +4,7 @@ export type HandlerCallback = (data: any) => void
 
 const handlers: { [key: string]: HandlerCallback[] } = {}
 
-export function addEventHandler(type: string, handler: HandlerCallback): boolean {
+export function addEventHandler(type: string, handler: HandlerCallback | undefined): boolean {
   handlers[type] = handlers[type] || []
   if (typeof handler !== 'function') {
     return false

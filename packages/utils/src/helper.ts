@@ -35,3 +35,16 @@ export function generateUUID(): string {
   })
   return uuid
 }
+
+export const throttle = (fn: Function, delay: number): Function => {
+  let canRun = true
+  return function (...args: any) {
+    if (!canRun) return
+    // @ts-ignore
+    fn.apply(this, args)
+    canRun = false
+    setTimeout(() => {
+      canRun = true
+    }, delay)
+  }
+}

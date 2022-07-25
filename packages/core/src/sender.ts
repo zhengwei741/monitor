@@ -1,5 +1,5 @@
-import { Sender, CreaterSenderOptions, RequestData, Event } from '@monitor/types'
-import { makePromiseBuffer, PromiseBuffer, MonitorError, getTimestamp } from '@monitor/utils'
+import { Sender, CreaterSenderOptions, RequestData, Event, SendFn } from '@monitor/types'
+import { makePromiseBuffer, PromiseBuffer, MonitorError } from '@monitor/utils'
 
 const DEFALUT_BUFFSIZE = 30
 
@@ -9,7 +9,7 @@ export function createrSender(
 ): Sender {
   const buffer: PromiseBuffer<void> = makePromiseBuffer(options?.buffSize || DEFALUT_BUFFSIZE)
 
-  const send = function(event: Event): PromiseLike<void> {
+  const send: SendFn = function(event: Event): PromiseLike<void> {
     const requestData: RequestData = {
       body: event
     }

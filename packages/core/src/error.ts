@@ -5,7 +5,7 @@ interface IBaseError<T> {
 }
 
 export abstract class BaseError<T> implements IBaseError<T> {
-  public submitErrorids = []
+  public submitErrorids: number[] = []
 
   hashErrorId(str: string): number {
     let hash = 0

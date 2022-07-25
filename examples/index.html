@@ -18,13 +18,39 @@
   </body>
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.0-beta.2/vue.min.js"></script>
   <script src="../lib/monitor.umd.js"></script> -->
-  <script src="../lib/monitor-web.umd.js"></script>
+  <!-- <script src="../lib/monitor-web.umd.js"></script> -->
   <script>
-    new monitorWeb({
-      url: 'url',
-      appId: 'appId',
-      userId: 'userId'
+    window.addEventListener('error', (e) => {
+      console.log(e)
+    }, true)
+
+    const throttle = (fn, delay) => {
+      let canRun = true
+      return function (...args) {
+        if (!canRun) return
+        // @ts-ignore
+        fn.apply(this, args)
+        canRun = false
+        setTimeout(() => {
+          canRun = true
+        }, delay)
+      }
+    }
+
+    ['click'].forEach((eventType) => {
+      const _handler = throttle(function(_e) {
+        let target = _e.target
+        if (!target) return
+        console.log(eventType, target)
+      }, 1000)
+      window.document.addEventListener(eventType, _handler)
     })
+
+    // new monitorWeb({
+    //   url: 'url',
+    //   appId: 'appId',
+    //   userId: 'userId'
+    // })
 
     // setTimeout(() => {
     //   fetch('http://www.baidu.com')

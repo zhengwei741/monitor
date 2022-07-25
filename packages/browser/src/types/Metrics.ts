@@ -2,16 +2,19 @@ import { Metrics } from '@monitor/types'
 
 export type BrowserMetrics = JSMetrics | HTTPMetrics
 
-export type JSErrorTypes = {
-  RE: 'resource-error',
-  JE: 'js-error',
-  CE: 'cros-error',
-  PE: 'promise-error',
-  HE: 'http-error'
+export enum ErrorTypes {
+  RE = 'resource-error',
+  JE = 'js-error',
+  CE = 'cros-error',
+  PE = 'promise-error',
+  HE = 'http-error'
 }
+
+export type ErrorTypesv = 'resource-error' | 'js-error' | 'cros-error' | 'promise-error' | 'http-error'
+
 export interface JSMetrics extends Metrics{
   type: 'js'
-  subtype: JSErrorTypes[keyof JSErrorTypes]
+  subtype: ErrorTypesv
   meta: {
     url?: string
     html?: string
@@ -23,12 +26,16 @@ export interface JSMetrics extends Metrics{
 }
 export interface HTTPMetrics extends Metrics{
   type: 'http'
-  meta: {
-    url?: string
-    method?: 'GET' | 'POST'
-    request?: ''
-    status?: number
-  }
+  url?: string
+  method?: string
+  request?: ''
+  status?: number
+  body?: any
+  requestTime?: number
+  statusText?: string
+  response?: string
+  responseTime?: number
+  args?: any
 }
 
 export type BehaviorMetricsType = {
