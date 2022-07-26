@@ -1,6 +1,14 @@
 import { Plugin, Breadcrumb } from '@monitor/types'
-import { proxyHash, proxyHistory, proxyDomClick, htmlTreeAsString } from '../../utils'
+import {
+  proxyHash,
+  proxyHistory,
+  proxyDomClick,
+  htmlTreeAsString,
+  proxyFetch,
+  proxyHttpRequest
+} from '../../utils'
 import { BrowserSDK } from '../../core/sdk'
+import { HTTPMetrics } from '../../types/metrics'
 
 function init(sdk: BrowserSDK) {
   // 路由跳转行为
@@ -39,7 +47,22 @@ function initClick(sdk: BrowserSDK) {
 }
 
 function initAjax(sdk: BrowserSDK) {
-
+  const handler = function(metrics: HTTPMetrics) {
+    const Breadcrumb: Breadcrumb = {
+      category: metrics.requestType ? metrics.requestType : 'Xhr',
+      message: metrics.error ? metrics.error.message : '',
+      data: {
+        url: metrics.method,
+        method: metrics.method,
+        statusText: metrics.statusText,
+        args: metrics.args,
+        response: metrics.response
+      }
+    }
+    sdk.addBreadcrumb(Breadcrumb)
+  }
+  proxyFetch(handler)
+  proxyHttpRequest(handler)
 }
 
 export const BreadcrumbPlugin: Plugin = {

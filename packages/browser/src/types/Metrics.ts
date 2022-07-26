@@ -1,6 +1,6 @@
 import { Metrics } from '@monitor/types'
 
-export type BrowserMetrics = JSMetrics | HTTPMetrics
+export type BrowserMetrics = JSMetrics | HTTPMetrics | PerformanceMetrics | BehaviorMetrics
 
 export enum ErrorTypes {
   RE = 'resource-error',
@@ -24,6 +24,7 @@ export interface JSMetrics extends Metrics{
     colno?: number
   }
 }
+
 export interface HTTPMetrics extends Metrics{
   type: 'http'
   url?: string
@@ -36,6 +37,8 @@ export interface HTTPMetrics extends Metrics{
   response?: string
   responseTime?: number
   args?: any
+  requestType?: 'Fetch' | 'Xhr'
+  error?: Error | any
 }
 
 export type BehaviorMetricsType = {
@@ -47,9 +50,11 @@ export type BehaviorMetricsType = {
   PV: 'pv',
   ST: 'stay-time'
 }
+
 export interface BehaviorMetrics extends Metrics{
   type: 'behavior'
   subType: BehaviorMetricsType[keyof BehaviorMetricsType]
+  pageURL?: string
 }
 
 export type PerformanceTypes = {
@@ -61,7 +66,9 @@ export type PerformanceTypes = {
   TIMING: 'timing'
   RESOURCE: 'resource'
 }
+
 export interface PerformanceMetrics extends Metrics{
   type: 'performance'
   subType: PerformanceTypes[keyof PerformanceTypes]
+  pageURL?: string
 }

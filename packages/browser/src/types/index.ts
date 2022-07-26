@@ -1,3 +1,3 @@
-export * from './BrowserInitOptions'
-export * from './WebSDK'
-export * from './Metrics'
+export * from './browserInitOptions'
+export * from './webSDK'
+export * from './metrics'

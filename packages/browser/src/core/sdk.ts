@@ -7,7 +7,7 @@ import { createFetchSender, createXHRSender } from './sender'
 import { logger } from '@monitor/utils'
 import Package from '../../package.json'
 import { BrowserError } from './error'
-import { BrowserMetrics } from '../types/Metrics'
+import { BrowserMetrics } from '../types/metrics'
 
 const defalutPlugins: Plugin[] = []
 

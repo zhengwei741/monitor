@@ -1,6 +1,6 @@
 import { isInstanceOf, fill, isFunction } from '@monitor/utils'
 import { addEventHandler, triggerHandlers, HandlerCallback } from '@monitor/core'
-import { HTTPMetrics } from '../types/Metrics'
+import { HTTPMetrics } from '../types/metrics'
 
 const handlerType = {
   LH: '_loadHandler',
@@ -18,7 +18,8 @@ export function proxyHttpRequest(loadHandler: HandlerCallback | undefined) {
   }
 
   const httpMetrics: HTTPMetrics = {
-    type: 'http'
+    type: 'http',
+    requestType: 'Xhr'
   }
 
   fill(window.XMLHttpRequest, 'open', function(originalOpenMethod) {
@@ -83,6 +84,7 @@ export function proxyFetch(loadHandler: HandlerCallback | undefined) {
         method: getFetchMethod(args),
         url: getFetchUrl(args),
         requestTime: Date.now(),
+        requestType: 'Fetch'
       }
       return originaFetch.apply(window, args).then(
         async (response: any) => {
@@ -98,10 +100,10 @@ export function proxyFetch(loadHandler: HandlerCallback | undefined) {
           return response
         },
         (error: Error) => {
+          metrics.error = error
           triggerHandlers(handlerType.FLH, {
             ...metrics,
-            responseTime: Date.now(),
-            error,
+            responseTime: Date.now()
           })
           return error
         }

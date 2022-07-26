@@ -1,11 +1,13 @@
 import { getGlobalObject, throttle } from '@monitor/utils'
-import { addEventHandler, triggerHandlers, HandlerCallback } from '@monitor/core'
+import { addEventHandler, triggerHandlers } from '@monitor/core'
 
 const instrumentType = {
-  DC: 'dom-click'
+  DC: '_dom_click'
 }
 
-export function proxyDomClick(handler: HandlerCallback) { 
+type handlerType = (e: Event) => void
+
+export function proxyDomClick(handler: handlerType) { 
   const _global = getGlobalObject<Window>()
 
   if (!('document' in _global)) {
@@ -18,9 +20,9 @@ export function proxyDomClick(handler: HandlerCallback) {
   }
 
   const globalDOMEventHandler = throttle(function(e: Event) {
-    let target = e.target || e.srcElement
-    if (!target) return
-    triggerHandlers(instrumentType.DC, target)
+    // let target = e.target || e.srcElement
+    // if (!target) return
+    triggerHandlers(instrumentType.DC, e)
   }, 1000) as any
 
   _global.addEventListener('click', globalDOMEventHandler)
