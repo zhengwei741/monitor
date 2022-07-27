@@ -1,12 +1,12 @@
 import { SDK } from '@monitor/core'
 import { supportsFetch } from '@monitor/utils'
+import { logger } from '@monitor/utils'
 import { BrowserInitOptions, BrowserMetrics } from '../types/index'
 import { stackParser } from './stack-parsers'
 import { createFetchSender, createXHRSender } from './sender'
-import { logger } from '@monitor/utils'
 import { initConfig } from './config'
-import Package from '../../package.json'
 import { BrowserError } from './error'
+import Package from '../../package.json'
 
 export class BrowserSDK extends SDK<BrowserInitOptions> {
   private error: BrowserError = new BrowserError()
