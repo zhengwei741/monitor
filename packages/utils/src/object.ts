@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isFunction } from '@monitor/utils'
 
 export function markFunctionWrapped(wrapped: any, original: any) {

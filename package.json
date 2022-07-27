@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "前端监控jssdk",
   "scripts": {
-    "lint": "eslint --ext .js,.ts src",
+    "lint": "eslint --ext .js,.ts packages",
     "dev": "rollup --config build/rollup.config.dev.js -w",
     "build": "rollup --config build/rollup.config.build.js",
     "prepare": "husky install",

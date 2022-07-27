@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Event } from './event'
 export interface Sender {
   send: SendFn
@@ -17,4 +18,5 @@ export interface RequestData {
 export interface CreaterSenderOptions {
   buffSize?: number
   url: string
+  onBeforSend?: (event: Event) => RequestData
 }

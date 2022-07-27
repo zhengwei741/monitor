@@ -1,4 +1,3 @@
-import { logger } from './logger'
 import { MonitorError } from './error'
 
 export interface PromiseBuffer<T> {
@@ -31,6 +30,7 @@ export function makePromiseBuffer<T>(limit?: number): PromiseBuffer<T> {
     task
       .then(() => remove(task))
       .then(null, () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         remove(task).then(null, () => {})
       })
     return task

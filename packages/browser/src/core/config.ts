@@ -14,6 +14,7 @@ function findPlugin (names: string[] = []): Plugin[] {
   return fplugin
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getPluginName(option: any, defaultNames: string[] = []): string[] {
   const names: string[] = []
   
@@ -27,14 +28,14 @@ function getPluginName(option: any, defaultNames: string[] = []): string[] {
   }
   names.push(
     ...Object.keys(option)
-      .filter(key => option[key])
+      .filter(key => option[key] !== true)
       .map(name => name)
     )
   return names
 }
 
 export function initConfig (options: BrowserInitOptions) {
-  let { behavior, error, performance } = options
+  const { behavior, error, performance } = options
   const defalutPlugins: Plugin[] = [
     plugins.BreadcrumbPlugin
   ]

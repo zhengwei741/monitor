@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFunctionName } from '@monitor/utils'
 
 export type HandlerCallback = (data: any) => void

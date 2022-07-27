@@ -23,6 +23,7 @@ export function proxyDomClick(handler: handlerType) {
     // let target = e.target || e.srcElement
     // if (!target) return
     triggerHandlers(instrumentType.DC, e)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }, 1000) as any
 
   _global.addEventListener('click', globalDOMEventHandler)

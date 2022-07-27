@@ -3,6 +3,7 @@ import { BrowserMetrics, ErrorTypes, JSMetrics, HTTPMetrics } from '../types'
 
 export class BrowserError extends BaseError<BrowserMetrics> {
   createErrorid(metrics: BrowserMetrics): number | boolean {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let id: any
     if (metrics.type === 'http') {
       metrics = metrics as HTTPMetrics

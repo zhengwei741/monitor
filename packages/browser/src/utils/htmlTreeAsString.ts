@@ -5,7 +5,7 @@ export function htmlTreeAsString(elm: unknown, keyAttrs?: string[]): string {
 
   try {
     let currentElem = elm as SimpleNode
-    let out: string[] = []
+    const out: string[] = []
     const MAX_TRAVERSE_HEIGHT = 5
     const MAX_OUTPUT_LEN = 80
     let height = 0
@@ -41,7 +41,7 @@ function htmlElementAsString(el: unknown, keyAttrs: string[] = []): string {
     return ''
   }
 
-  let out: string[] = []
+  const out: string[] = []
 
   const keyAttrPairs =
     keyAttrs && keyAttrs.length ?
@@ -58,7 +58,7 @@ function htmlElementAsString(el: unknown, keyAttrs: string[] = []): string {
     if (elem.id) {
       out.push(`#${elem.id}`)
     }
-    let className = elem.className
+    const className = elem.className
     if (className) {
       const clsArr = className.split(' ')
       clsArr.forEach(cls => out.push(`.${cls}`))

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metrics } from '@monitor/types'
 
 export type BrowserMetrics = JSMetrics | HTTPMetrics | PerformanceMetrics | BehaviorMetrics

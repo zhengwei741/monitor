@@ -3,7 +3,7 @@ import { StackParserLine, StackParserFn, Frame } from '@monitor/types'
 const STACKTRACE_LIMIT = 50
 
 export function createStackParser(...parsers: StackParserLine[]) {
-  return function stackParser (stack: string = '', skipFirst: number = 0): Frame[] {
+  return function stackParser (stack = '', skipFirst = 0): Frame[] {
     const frames: Frame[] = []
     for (const line of stack.split('\n').slice(skipFirst)) {
       for (const parser of parsers) {

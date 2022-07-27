@@ -66,6 +66,7 @@ export const PromiseErrorPlugin: Plugin = {
       }
       sdk.capture(metrics)
       if (oldOnunhandledrejection) {
+        // eslint-disable-next-line prefer-rest-params
         oldOnunhandledrejection.apply(this, arguments)
       }
     }
@@ -84,9 +85,11 @@ export const ResourceErrorPlugin: Plugin = {
       if (target && target.nodeType === 1) {
         let src = ''
         if (target.nodeName.toLowerCase() === 'link') {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           src = target.href
         } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           src = target.currentSrc || target.src
         }

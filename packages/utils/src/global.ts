@@ -22,6 +22,7 @@ export interface MonitorGlobal {
 
 export function getGlobalSingleton(
   name: keyof MonitorGlobal['__MONITOR__'],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   creater: (...args: any[]) => any
 ) {
   const global = getGlobalObject() as MonitorGlobal

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Event } from './event'
 import { Breadcrumb } from './breadcrumb'
 import { Plugin } from './plugin'
@@ -32,7 +33,7 @@ export interface InitOptions extends HooksTypes{
 
 export interface HooksTypes {
   // 此函数使用 SDK 特定的事件对象调用，并且可以返回修改后的事件对象或不返回任何内容以跳过报告事件。
-  beforeSend?: (event: Event) => {},
+  beforeSend?: (event: Event) => any,
   // 在将面包屑添加到范围之前，使用特定于 SDK 的面包屑对象调用此函数。
-  beforeBreadcrumb?: (breadcrumb: Breadcrumb) => {}
+  beforeBreadcrumb?: (breadcrumb: Breadcrumb) => any
 }

@@ -81,7 +81,7 @@ export const ClickPlugin: Plugin = {
   name: 'behavior_click',
   method: function(sdk: BrowserSDK) {
     const handler = function(e: Event) {
-      let target = (e.target || e.srcElement) as HTMLElement
+      const target = (e.target || e.srcElement) as HTMLElement
       if (!target) {
         return
       }

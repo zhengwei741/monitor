@@ -1,9 +1,23 @@
-import { Sender, CreaterSenderOptions, RequestData, Event, SendFn } from '@monitor/types'
-import { makePromiseBuffer, PromiseBuffer, MonitorError } from '@monitor/utils'
+import {
+  Sender,
+  CreaterSenderOptions,
+  RequestData,
+  Event,
+  SendFn
+} from '@monitor/types'
+import {
+  makePromiseBuffer,
+  PromiseBuffer,
+  MonitorError,
+  isFunction,
+  isThenable,
+  isPlainObject
+} from '@monitor/utils'
 
 const DEFALUT_BUFFSIZE = 30
 
 export function createrSender(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   makeRequest: (requestData: RequestData) => Promise<any>,
   options?: CreaterSenderOptions
 ): Sender {
@@ -13,8 +27,27 @@ export function createrSender(
     const requestData: RequestData = {
       body: event
     }
-
     const requestTask = function(): PromiseLike<void> {
+      if (options) {
+        const { onBeforSend } = options
+        if (onBeforSend && isFunction(onBeforSend)) {
+          const rv = onBeforSend(event)
+          if (isThenable(rv)) {
+            return rv.then(res => {
+              if (!isPlainObject(rv) || rv === null) {
+                throw new MonitorError('onBeforSend 返回为空')
+              }
+              requestData.body = res
+              return makeRequest(requestData)
+            }, (e) => {
+              throw new MonitorError(`onBeforSend reject: ${e}`)  
+            })
+          } else if (!isPlainObject(rv) || rv === null) {
+            throw new MonitorError('onBeforSend 返回为空')
+          }
+          requestData.body = rv
+        }
+      }
       return makeRequest(requestData)
     }
     return buffer

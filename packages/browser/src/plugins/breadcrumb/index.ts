@@ -21,6 +21,7 @@ function init(sdk: BrowserSDK) {
 }
 
 function initRoute(sdk: BrowserSDK) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handler = function(args: any) {
     const Breadcrumb: Breadcrumb = {
       category: 'Route',
@@ -37,7 +38,7 @@ function initRoute(sdk: BrowserSDK) {
 
 function initClick(sdk: BrowserSDK) {
   const handler = function(e: Event) {
-    let target = (e.target || e.srcElement) as HTMLElement
+    const target = (e.target || e.srcElement) as HTMLElement
     if (!target) {
       return
     }

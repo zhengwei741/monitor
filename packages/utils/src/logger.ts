@@ -4,6 +4,7 @@ export const CONSOLE_LEVELS = ['info', 'warn', 'error', 'log']
 
 const PREFIX = 'Monitor Logger '
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const global = getGlobalObject<Window | any>()
 
 type LoggerMethod = (...args: unknown[]) => void
@@ -41,7 +42,7 @@ function makeLogger (): Logger {
   return logger as Logger
 }
 
-let logger: Logger = getGlobalSingleton('logger', makeLogger)
+const logger: Logger = getGlobalSingleton('logger', makeLogger)
 
 export {
   logger

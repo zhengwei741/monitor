@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getGlobalObject, fill } from '@monitor/utils'
 
 const global = getGlobalObject<Window>()
@@ -13,9 +14,10 @@ function wrHistory() {
   if ('history' in global) {
     ['pushState', 'replaceState'].forEach(type => {
       fill(global.history, type, function(original) {
-        return function() {
+        return function(...args: any) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          const rv = original.apply(this, arguments)
+          const rv = original.apply(this, args)
           dispatchEvent(type)
           return rv
         }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isInstanceOf, fill, isFunction } from '@monitor/utils'
 import { addEventHandler, triggerHandlers, HandlerCallback } from '@monitor/core'
 import { HTTPMetrics } from '../types/metrics'
@@ -24,7 +25,9 @@ export function proxyHttpRequest(loadHandler: HandlerCallback | undefined) {
 
   fill(window.XMLHttpRequest, 'open', function(originalOpenMethod) {
     return function(...args: any[]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const xhr = this
       httpMetrics.method = args[0]
       httpMetrics.url = args[1]
@@ -57,7 +60,9 @@ export function proxyHttpRequest(loadHandler: HandlerCallback | undefined) {
 
   fill(window.XMLHttpRequest, 'send', function(originalSendMethod) {
     return function(...args: any[]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const xhr = this
       httpMetrics.body = args[0]
       httpMetrics.requestTime = Date.now()

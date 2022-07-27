@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFCP, getLCP, getFID, getCLS, Metric } from 'web-vitals'
 import { Plugin } from '@monitor/types'
 import { BrowserSDK } from '../../core/sdk'

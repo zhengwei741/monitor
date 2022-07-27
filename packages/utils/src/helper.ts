@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { logger } from './logger'
 
 export function getTimestamp(): number {
@@ -36,10 +37,12 @@ export function generateUUID(): string {
   return uuid
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const throttle = (fn: Function, delay: number): Function => {
   let canRun = true
   return function (...args: any) {
     if (!canRun) return
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     fn.apply(this, args)
     canRun = false

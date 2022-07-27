@@ -1,5 +1,22 @@
-import { InitOptions, Sender, StackParserFn, Plugin, Breadcrumb, Breadcrumbs, Metrics, Event } from '@monitor/types'
-import { logger, isFunction, MonitorError, getTimestamp, generateUUID } from '@monitor/utils'
+import {
+  InitOptions,
+  Sender,
+  StackParserFn,
+  Plugin,
+  Breadcrumb,
+  Breadcrumbs,
+  Metrics,
+  Event
+} from '@monitor/types'
+import {
+  logger,
+  isFunction,
+  MonitorError,
+  getTimestamp,
+  generateUUID,
+  isThenable,
+  isPlainObject
+} from '@monitor/utils'
 import { initBreadcrumbs } from './breadcrumb'
 
 export class SDK<O extends InitOptions> {
@@ -7,7 +24,7 @@ export class SDK<O extends InitOptions> {
 
   protected dsn: string
 
-  protected plugins: {[key : string]: any} = {}
+  protected plugins: {[key : string]: Plugin} = {}
 
   protected _sender: Sender
 
@@ -32,7 +49,8 @@ export class SDK<O extends InitOptions> {
 
     this._sender = sender({
       url: options.dsn,
-      buffSize: options.buffSize
+      buffSize: options.buffSize,
+      ...(options.beforeSend && { onBeforSend: options.beforeSend })
     })
 
     this._stackParser = stackParser
@@ -47,7 +65,7 @@ export class SDK<O extends InitOptions> {
       try {
         if (!this.plugins[plugin.name] && isFunction(plugin.method)) {
           plugin.method.call(this, this)
-          this.plugins[plugin.name] = plugin.method
+          this.plugins[plugin.name] = plugin
         }
       } catch (e) {
         logger.error(`安装${plugin.name}插件失败`, e)
@@ -77,8 +95,29 @@ export class SDK<O extends InitOptions> {
     this._sender.send(event)
   }
 
-  addBreadcrumb(breadcrumb: Breadcrumb) {
+  async addBreadcrumb(breadcrumb: Breadcrumb) {
     breadcrumb.timestamp = getTimestamp()
+    const { beforeBreadcrumb } = this._options
+    if (beforeBreadcrumb && isFunction(beforeBreadcrumb)) {
+      const beforeResult = await ensureBeforeRv(beforeBreadcrumb(breadcrumb))
+      breadcrumb = beforeResult
+    }
     this.breadcrumbs.addBreadcrumb(breadcrumb)
   }
+}
+
+function ensureBeforeRv(rv: PromiseLike<Breadcrumb> | null) {
+  if (isThenable(rv)) {
+    return rv.then(res => {
+      if (!isPlainObject(res) || res === null) {
+        throw new MonitorError('beforeBreadcrumb 返回为空')
+      }
+      return res
+    }, (e) => {
+      throw new MonitorError(`beforeBreadcrumb rejected ${e}`)
+    })
+  } else if (!isPlainObject(rv) || rv === null) {
+    throw new MonitorError('beforeBreadcrumb 返回为空')
+  }
+  return rv
 }
