@@ -15,7 +15,7 @@ import {
 import { BehaviorMetrics, HTTPMetrics } from '../../types'
 
 export const pvPlugin: Plugin = {
-  name: 'pvPlugin',
+  name: 'behavior_pv',
   method: function(sdk: BrowserSDK) {
     const handler = function() {
       const BehaviorMetrics: BehaviorMetrics = {
@@ -36,7 +36,7 @@ export const pvPlugin: Plugin = {
 }
 
 export const HttpRecordPlugin: Plugin = {
-  name: 'HttpRecordPlugin',
+  name: 'behavior_http',
   method: function(sdk: BrowserSDK) {
     const handler = function(httpMetrics: HTTPMetrics) {
       const BehaviorMetrics: BehaviorMetrics = {
@@ -54,7 +54,7 @@ export const HttpRecordPlugin: Plugin = {
 }
 
 export const RouterChangePlugin: Plugin = {
-  name: 'RouterChangePlugin',
+  name: 'behavior_router',
   method: function(sdk: BrowserSDK) {
     const handler = function(e: Event) {
       const BehaviorMetrics: BehaviorMetrics = {
@@ -78,7 +78,7 @@ export const RouterChangePlugin: Plugin = {
 }
 
 export const ClickPlugin: Plugin = {
-  name: 'ClickPlugin',
+  name: 'behavior_click',
   method: function(sdk: BrowserSDK) {
     const handler = function(e: Event) {
       let target = (e.target || e.srcElement) as HTMLElement
@@ -115,7 +115,7 @@ interface RouteRecord {
 }
 const routeList: RouteRecord[] = []
 export const StayTimePlugin: Plugin = {
-  name: 'StayTimePlugin',
+  name: 'behavior_stayTime',
   method: function(sdk: BrowserSDK) {
     const handler = function() {
       const time = Date.now()

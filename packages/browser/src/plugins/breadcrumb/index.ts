@@ -36,7 +36,11 @@ function initRoute(sdk: BrowserSDK) {
 }
 
 function initClick(sdk: BrowserSDK) {
-  const handler = function(target: HTMLElement) {
+  const handler = function(e: Event) {
+    let target = (e.target || e.srcElement) as HTMLElement
+    if (!target) {
+      return
+    }
     const Breadcrumb: Breadcrumb = {
       category: 'UI.Click',
       message: htmlTreeAsString(target)

@@ -6,7 +6,7 @@ import { PerformanceMetrics, HTTPMetrics } from '../../types/metrics'
 
 // 白屏（FP）、灰屏（FCP）
 export const fcpPlugin: Plugin = {
-  name: '_performance_fcp',
+  name: 'performance_fcp',
   method: function(sdk: BrowserSDK) {
     onAfterLoad(() => {
       getFCP(function(metric: Metric) {
@@ -26,7 +26,7 @@ export const fcpPlugin: Plugin = {
 
 // 最大内容绘制（LCP）
 export const lcpPlugin: Plugin = {
-  name: '_performance_lcp',
+  name: 'performance_lcp',
   method: function(sdk: BrowserSDK) {
     getLCP(function(metric: Metric) {
       const performanceMetrics: PerformanceMetrics = {
@@ -43,7 +43,7 @@ export const lcpPlugin: Plugin = {
 }
 
 export const fidPlugin: Plugin = {
-  name: '_performance_fid',
+  name: 'performance_fid',
   method: function(sdk: BrowserSDK) {
     onAfterLoad(() => {
       getFID(function(metric: Metric) {
@@ -62,7 +62,7 @@ export const fidPlugin: Plugin = {
 }
 
 export const clsPlugin: Plugin = {
-  name: '_performance_cls',
+  name: 'performance_cls',
   method: function(sdk: BrowserSDK) {
     getCLS(function(metric: Metric) {
       const performanceMetrics: PerformanceMetrics = {
@@ -79,7 +79,7 @@ export const clsPlugin: Plugin = {
 }
 
 export const httpTimeConsumingPlugin: Plugin = {
-  name: '_performance_httpTimeConsuming',
+  name: 'performance_httpTimeConsuming',
   method: function(sdk: BrowserSDK) {
     const handle = function(metrics: HTTPMetrics) {
       if (metrics.error || (metrics.status && metrics.status < 400)) {
@@ -117,7 +117,7 @@ const supported = {
 }
 
 export const timingPlugin: Plugin = {
-  name: '_performance_timing',
+  name: 'performance_timing',
   method: function(sdk: BrowserSDK) {
     onAfterLoad(() => {
       let t = performance.timing
@@ -202,7 +202,7 @@ function isCache(entry: PerformanceResourceTiming) {
 }
 
 export const ResourceFlowPlugin: Plugin = {
-  name: '_performance_resource',
+  name: 'performance_resource',
   method: function(sdk: BrowserSDK) {
 
     const resourceFlow: { [key: string]: any }[] = []

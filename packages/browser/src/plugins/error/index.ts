@@ -4,7 +4,7 @@ import { HTTPMetrics, JSMetrics, ErrorTypes } from '../../types'
 import { BrowserSDK } from '../../core/sdk'
 
 export const HttpErrorPlugin: Plugin = {
-  name: 'HttpErrorPlugin',
+  name: 'error_http',
   method: function(sdk: BrowserSDK) {
     const onloadHandler = function(metrics: HTTPMetrics) {
       const { status } = metrics
@@ -24,8 +24,8 @@ const getErrorKey = (event: ErrorEvent) => {
   return event.message === 'Script error.' ? ErrorTypes.CE : ErrorTypes.JE
 }
 
-export const JSErrorPlugins: Plugin = {
-  name: 'jsErrorPlugins',
+export const JSErrorPlugin: Plugin = {
+  name: 'error_js',
   method: function (sdk: BrowserSDK) {
     _global.addEventListener('error', (e) => {
       if (e.error) {
@@ -53,7 +53,7 @@ export const JSErrorPlugins: Plugin = {
 }
 
 export const PromiseErrorPlugin: Plugin = {
-  name: 'PromiseErrorPlugin',
+  name: 'error_promise',
   method: function(sdk: BrowserSDK) {
     const oldOnunhandledrejection = _global.onunhandledrejection
     _global.onunhandledrejection = function(e) {
@@ -73,7 +73,7 @@ export const PromiseErrorPlugin: Plugin = {
 }
 
 export const ResourceErrorPlugin: Plugin = {
-  name: 'resourceErrorPlugin',
+  name: 'error_resource',
   method: function(sdk: BrowserSDK) {
     if (!('document' in _global)) {
       return
