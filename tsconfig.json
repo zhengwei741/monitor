@@ -1,25 +1,28 @@
 {
   "compilerOptions": {
-    "alwaysStrict": false,
-    "declaration": true,
-    "declarationMap": true,
-    "downlevelIteration": true,
-    "importHelpers": true,
-    "inlineSources": true,
-    "isolatedModules": true,
-    "lib": ["es6", "dom", "es2016"],
+    "baseUrl": ".",
+    "outDir": "dist",
+    "sourceMap": false,
+    "target": "es2016",
+    "useDefineForClassFields": false,
+    "module": "esnext",
     "moduleResolution": "node",
-    "noEmitHelpers": true,
-    "noErrorTruncation": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "preserveWatchOutput": true,
-    "sourceMap": true,
+    "allowJs": false,
     "strict": true,
-    "strictBindCallApply": false,
-    "target": "es6"
-  }
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "jsx": "preserve",
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    // "types": ["jest", "puppeteer", "node"],
+    "rootDir": ".",
+  },
+  "include": [
+    "packages/*/src"
+  ]
 }

@@ -1,4 +1,12 @@
-node_modules
-examples
-.eslintrc.js
-build
+/node_modules
+/dist
+/doc
+**/dist
+**/build
+**/esm
+**/node_modules
+/scripts
+
+commitlint.config.js
+
+rollup.config.js

@@ -2,7 +2,10 @@
   "name": "@monitor/types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/types.cjs",
+  "module": "dist/types.esm.js",
+  "jsdelivr": "dist/types.umd.js",
+  "types": "dist/types/types.d.ts",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
