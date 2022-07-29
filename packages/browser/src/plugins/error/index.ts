@@ -66,8 +66,7 @@ export const PromiseErrorPlugin: Plugin = {
       }
       sdk.capture(metrics)
       if (oldOnunhandledrejection) {
-        // eslint-disable-next-line prefer-rest-params
-        oldOnunhandledrejection.apply(this, arguments)
+        oldOnunhandledrejection.call(this, e)
       }
     }
   }

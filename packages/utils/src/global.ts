@@ -1,4 +1,4 @@
-import { Logger } from '@monitor/utils'
+import { Logger } from './logger'
 import { Breadcrumbs } from '@monitor/types'
 
 const fallbackGlobalObject = {}

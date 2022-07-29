@@ -1,4 +1,5 @@
 const fs = require('fs')
+const chalk = require('chalk')
 
 // packages 下所有包名
 // browser core ...
@@ -12,3 +13,5 @@ exports.allTargets = fs.readdirSync('packages').filter((f) => {
   }
   return true
 })
+
+exports.step = msg => console.log(chalk.cyan(msg))

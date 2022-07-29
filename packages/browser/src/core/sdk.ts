@@ -1,6 +1,5 @@
 import { SDK } from '@monitor/core'
-import { supportsFetch } from '@monitor/utils'
-import { logger } from '@monitor/utils'
+import { supportsFetch, logger } from '@monitor/utils'
 import { BrowserInitOptions, BrowserMetrics } from '../types/index'
 import { stackParser } from './stack-parsers'
 import { createFetchSender, createXHRSender } from './sender'

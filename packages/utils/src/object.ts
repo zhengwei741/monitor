@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isFunction } from '@monitor/utils'
+import { isFunction } from './is'
 
 export function markFunctionWrapped(wrapped: any, original: any) {
   const proto = original.prototype || {}
