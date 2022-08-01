@@ -2,13 +2,23 @@ const fs = require('fs')
 const path = require('path')
 const { prompt } = require('enquirer')
 const semver = require('semver')
+const chalk = require('chalk')
+const { step, run } = require('./utils')
+
+const packages = fs
+  .readdirSync(path.resolve(__dirname, '../packages'))
 
 const currentVersion = require('../package.json').version
 
 const versionIncrements = ['patch', 'minor', 'major']
 const inc = v => semver.inc(currentVersion, v)
 
-main()
+main().catch((e) => {
+  updatePackage(currentVersion)
+  console.log(
+    chalk.red(e)
+  )
+})
 
 async function main() {
   // prompt 选择发布版本
@@ -32,15 +42,29 @@ async function main() {
   }
 
   // jest 测试用例
+  // step('jest')
 
+  step('\nupdateVersions')
   await updateVersions(targetVersion)
+
+  step('\n打包')
+  await run('npm', ['build', '--release'])
+
+  step('\nUpdating lockfile...')
+  await run(`npm`, ['install', '--prefer-offline'])
+
+  step('\n生成日志')
+
+  step('\n发布包至 npm')
+  await publishPackages(targetVersion)
 }
 
 async function updateVersions (version) {
   // 更新版本号
     // 1.更新主版本
-  updatePackage()
+  updatePackage(path.resolve(__dirname, '..'), version)
     // 2.更新所有包版本
+  packages.forEach(package => updatePackage(package, version))
 }
 
 function updatePackage(pkgRoot, version) {
@@ -53,13 +77,59 @@ function updatePackage(pkgRoot, version) {
 }
 
 function updateDeps(pkg, depType, version) {
-
+  const dep = pkg[depType]
+  if (!dep) {
+    return
+  }
+  Object.keys(dep).forEach(key => {
+    if (key.startsWith('@monitor/')) {
+      pkg[depType] = version
+      console.log(
+        chalk.yellow(`${pkg.name} -> ${depType} -> ${dep}@${version}`)
+      )
+    }
+  })
 }
 
+async function publishPackages(version) {
+  for (const packageName of packages) {
+    await publishPackage(packageName, version)
+  }
+}
 
-// 打包
-// 日志
-// update pnpm-lock.yaml
+async function publishPackage(packageName, version) {
+  const packagePath = path.resolve(__dirname, '../packages', packageName)
+  const pkgPath = path.resolve(packagePath, 'package.json')
+  const pkg = require(pkgPath)
+  if (pkg.private) return
+  const pkgRoot = path.resolve(packagePath, 'dist')
+
+  step(`发布 ${packageName} 中...`)
+
+  try {
+    await run(
+      'npm',
+      [
+        'publish',
+        '--new-version',
+        version,
+        '--access',
+        'public',
+        '--registry',
+        'https://registry.npmjs.org'
+      ],
+      {
+        cwd: pkgRoot,
+        stdio: 'pipe'
+      }
+    )
+    console.log(chalk.green(`发布成功 ${packageName}@${version}`))
+  } catch (e) {
+    console.log(`发布失败 ${packageName}@${version}`, error)
+    throw error
+  }
+}
+
 // git add commit
-// 发布包至 npm
+
 // 提交 github
