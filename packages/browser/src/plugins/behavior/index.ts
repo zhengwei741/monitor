@@ -54,7 +54,7 @@ export const HttpRecordPlugin: Plugin = {
 }
 
 export const RouterChangePlugin: Plugin = {
-  name: 'behavior_router',
+  name: 'behavior_route',
   method: function(sdk: BrowserSDK) {
     const handler = function(e: Event) {
       const BehaviorMetrics: BehaviorMetrics = {

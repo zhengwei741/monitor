@@ -53,13 +53,17 @@ async function main() {
   step('\nUpdating lockfile...')
   await run(`npm`, ['install', '--prefer-offline'])
 
-  step('\n生成日志')
+  step('\n日志')
   await run(`npm`, ['run', 'changelog'])
 
   step('\n发布包至 npm')
   for (const packageName of packages) {
     await publishPackage(packageName, version)
   }
+
+  // git add commit
+
+  // 提交 github
 }
 
 async function updateVersions (version) {
@@ -126,7 +130,3 @@ async function publishPackage(packageName, version) {
     throw error
   }
 }
-
-// git add commit
-
-// 提交 github

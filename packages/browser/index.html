@@ -1,0 +1,80 @@
+<html>
+  <!-- <script src="./dist/browser.umd.js"></script> -->
+
+  <script>
+  function hashErrorId(str) {
+    let hash = 0;
+    if (str.length == 0)
+        return hash;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return hash;
+  }
+  const submitErrorids = []
+  var ErrorTypes;
+    (function (ErrorTypes) {
+        ErrorTypes["RE"] = "resource-error";
+        ErrorTypes["JE"] = "js-error";
+        ErrorTypes["CE"] = "cros-error";
+        ErrorTypes["PE"] = "promise-error";
+        ErrorTypes["HE"] = "http-error";
+    })(ErrorTypes || (ErrorTypes = {}));
+  function createErrorid(metrics) {
+    let id;
+    if (metrics.type === 'http') {
+        metrics = metrics;
+        id = metrics.type + metrics.method + metrics.status + metrics.url + metrics.appKey;
+    }
+    else {
+        switch (metrics.subtype) {
+            case ErrorTypes.PE:
+                id = metrics.type + metrics.stack + metrics.message + metrics.appKey;
+                break;
+            case ErrorTypes.RE:
+            case ErrorTypes.JE:
+            case ErrorTypes.CE:
+                metrics = metrics;
+                id = metrics.type + metrics.subtype + metrics.message + metrics.appKey + metrics.meta.filename;
+                break;
+            default:
+                id = metrics.type + metrics.message + metrics.appKey;
+        }
+    }
+    id = hashErrorId(id);
+    if (submitErrorids.includes(id)) {
+        return false;
+    }
+    submitErrorids.push(id);
+    return id;
+  }
+
+  const httpMetrics = {
+    type: 'http',
+    method: 'post',
+    status: 200,
+    url: 'http://test.com',
+    appKey: 'xxx'
+  }
+
+  const promiseErrorMetrics = {
+      type: 'js',
+      subtype: 'promise-error',
+      stack: [],
+      message: 'promise-error',
+      appKey: 'xxx'
+    }
+
+  const id = createErrorid(
+    httpMetrics
+  )
+  const id2 = createErrorid(
+    promiseErrorMetrics
+  )
+
+  console.log(id)
+  console.log(id2)
+  </script>
+</html>

@@ -187,7 +187,7 @@ export const timingPlugin: Plugin = {
 // 不统计以下类型的资源
 const preventType = ['fetch', 'xmlhttprequest', 'beacon']
 
-const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+const isSafari = /Safari/.test(_global.navigator.userAgent) && !/Chrome/.test(_global.navigator.userAgent)
 if (isSafari) {
   // safari 会把接口请求当成 other
   preventType.push('other')
@@ -260,6 +260,6 @@ export const ResourceFlowPlugin: Plugin = {
       sdk.capture(performanceMetrics)
     }
     // 当页面 pageshow 触发时，中止
-    window.addEventListener('pageshow', stopListening, { once: true, capture: true });
+    _global.addEventListener('pageshow', stopListening, { once: true, capture: true });
   }
 }

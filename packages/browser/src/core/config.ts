@@ -18,17 +18,20 @@ function findPlugin (names: string[] = []): Plugin[] {
 function getPluginName(option: any, defaultNames: string[] = []): string[] {
   const names: string[] = []
   
-  if (typeof option === 'undefined') {
+  if (!option) {
     option = {}
   }
   if (typeof option === 'boolean') {
-    option = defaultNames.reduce((prve, curren) => {
-      return prve[curren] = option
-    }, {} as { [key: string] : boolean })
+    const _option: { [key: string] : boolean } = {}
+    defaultNames.reduce((prve, curren) => {
+      prve[curren] = option
+      return prve
+    }, _option)
+    option = _option
   }
   names.push(
     ...Object.keys(option)
-      .filter(key => option[key] !== true)
+      .filter(key => option[key] === true)
       .map(name => name)
     )
   return names
@@ -59,11 +62,14 @@ export function initConfig (options: BrowserInitOptions) {
   names.push(
     ...getPluginName(
       performance,
-      ['fcp', 'lcp', 'fid', 'cls', 'http', 'timing', 'resource', 'httpTimeConsuming']
+      ['fcp', 'lcp', 'fid', 'cls', 'httpTimeConsuming', 'timing', 'resource']
     ).map(name => `performance_${name}`)
   )
 
   defalutPlugins.push(...findPlugin(names))
 
+  if (!options.plugins) {
+    options.plugins = []
+  }
   options.plugins = options.plugins.concat(defalutPlugins)
 }

@@ -120,10 +120,22 @@ const iifePackage = {
   plugins: [...common.plugins, terser()]
 }
 
+const umdPackage = {
+  ...common,
+  external: [],
+  output: {
+    file: `${packageDirDist}/${name}.umd.js`,
+    format: 'umd',
+    name: 'MONITOR'
+  },
+  plugins: [...common.plugins]
+}
+
 const total = {
   esmPackage,
+  cjsPackage,
   iifePackage,
-  cjsPackage
+  umdPackage
 }
 let result = total
 

@@ -11,13 +11,13 @@ export class BrowserError extends BaseError<BrowserMetrics> {
     } else {
       switch (metrics.subtype) {
         case ErrorTypes.PE:
-          id = metrics.type + metrics.stack + metrics.message + metrics.appKey
+          id = metrics.type + metrics.stack?.toString() + metrics.message + metrics.appKey
           break
         case ErrorTypes.RE:
         case ErrorTypes.JE:
         case ErrorTypes.CE:
           metrics = metrics as JSMetrics
-          id = metrics.type + metrics.subtype + metrics.message + metrics.appKey + metrics.meta.filename
+          id = metrics.type + metrics.subtype + metrics.message + metrics.appKey + (metrics.meta ? metrics.meta.filename : '')
           break
         default:
           id = metrics.type + metrics.message + metrics.appKey

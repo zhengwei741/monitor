@@ -6,7 +6,10 @@
 **/esm
 **/node_modules
 /scripts
+**/__tests__/*
 
 commitlint.config.js
+
+jest.config.ts
 
 rollup.config.js
