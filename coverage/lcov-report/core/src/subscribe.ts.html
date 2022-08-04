@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.57% </span>
+                <span class="strong">78.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/19</span>
+                <span class='fraction'>15/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>8/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.57% </span>
+                <span class="strong">78.94% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/19</span>
+                <span class='fraction'>15/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -95,61 +95,61 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable @typescript-eslint/no-explicit-any */
+<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFunctionName } from '@monitor/utils'
 &nbsp;
 export type HandlerCallback = (data: any) =&gt; void
 &nbsp;
 const handlers: { [key: string]: HandlerCallback[] } = {}
-<span class="fstat-no" title="function not covered" ></span>
-expo<span class="cstat-no" title="statement not covered" >rt function addEventHandler(type: strin</span>g, handler: HandlerCallback | undefined): boolean {
-  ha<span class="cstat-no" title="statement not covered" >ndlers[type] = handlers[type] || []</span>
+&nbsp;
+export function addEventHandler(type: string, handler: HandlerCallback | undefined): boolean {
+  ha<span class="missing-if-branch" title="if path not taken" >I</span>ndlers[type] = handlers[type] || []
   if (ty<span class="cstat-no" title="statement not covered" >peof handler !</span>== 'function') {
     return false
-  }<span class="cstat-no" title="statement not covered" ></span>
+  }<span class="missing-if-branch" title="if path not taken" >I</span>
   if (ha<span class="cstat-no" title="statement not covered" >ndlers[type].f</span>indIndex(handler) !== -1) {
     return false
-  }<span class="cstat-no" title="statement not covered" ></span>
-  ha<span class="cstat-no" title="statement not covered" >ndlers[type].</span>push(handler)
+  }
+  handlers[type].push(handler)
   return true
 }
-<span class="fstat-no" title="function not covered" ></span>
-expo<span class="cstat-no" title="statement not covered" >rt function triggerHandlers(type: string, data: any): void {</span>
+&nbsp;
+expo<span class="missing-if-branch" title="if path not taken" >I</span>rt function triggerHandlers(type: string, data: any): void {
   if (!t<span class="cstat-no" title="statement not covered" >ype || !</span>handlers[type]) {
     return
-  }<span class="cstat-no" title="statement not covered" ></span>
-  for (c<span class="cstat-no" title="statement not covered" >onst handler of handlers[type] || []) {</span>
-    try {<span class="cstat-no" title="statement not covered" ></span>
+  }<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+  for (const handler of handlers[type] || []) {
+    try {
       handler(data)
     } catch (e) {
       consol<span class="cstat-no" title="statement not covered" >e.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`)</span>
@@ -163,7 +163,7 @@ expo<span class="cstat-no" title="statement not covered" >rt function triggerHan
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-01T09:38:08.203Z
+                at 2022-08-04T09:36:21.436Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

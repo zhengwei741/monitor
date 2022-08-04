@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.31% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/19</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">70% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>7/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.31% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/19</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,36 +101,36 @@
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,33 +141,33 @@
 &nbsp;
 const STACKTRACE_LIMIT = 50
 &nbsp;
-export fu<span class="fstat-no" title="function not covered" >nction createStack</span>Parser(...parsers: StackParserLine[]) {
-  re<span class="cstat-no" title="statement not covered" >turn function st<span class="fstat-no" title="function not covered" >ackParser (s</span>tack = '<span class="branch-0 cbranch-no" title="branch not covered" >', </span>skipFirst = 0<span class="branch-0 cbranch-no" title="branch not covered" >):</span> Frame[] {</span>
-    const frames: Frame<span class="cstat-no" title="statement not covered" >[] </span>= []
-    for <span class="cstat-no" title="statement not covered" >(const line of stack.split('\n').slice(skipFirst)) {</span>
-      for (c<span class="cstat-no" title="statement not covered" >onst parser of parsers) {</span>
-        const frame = parser(l<span class="cstat-no" title="statement not covered" >ine)</span>
-        if (fram<span class="cstat-no" title="statement not covered" >e) {</span>
-          frames.pus<span class="cstat-no" title="statement not covered" >h(frame)</span>
+export function createStackParser(...parsers: StackParserLine[]) {
+  return function stackParser (stack = '<span class="branch-0 cbranch-no" title="branch not covered" >', </span>skipFirst = 0): Frame[] {
+    const frames: Frame[] = []
+    for (const line of stack.split('\n').slice(skipFirst)) {
+      for (const parser of parsers) {
+        const frame = parser(line)
+        if (fram<span class="missing-if-branch" title="else path not taken" >E</span>e) {
+          frames.push(frame)
         }
       }
     }
-    retu<span class="cstat-no" title="statement not covered" >rn stripSentryFramesAndReverse(frames)</span>
+    return stripSentryFramesAndReverse(frames)
   }
 }
 &nbsp;
-export fu<span class="fstat-no" title="function not covered" >nction stackParserFromStackParserO</span>ptions(parser: StackParserLine[]) : StackParserFn {
-  re<span class="cstat-no" title="statement not covered" >turn createStackParser(...parser)</span>
+export function stackParserFromStackParserOptions(parser: StackParserLine[]) : StackParserFn {
+  return createStackParser(...parser)
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >stripSentryFramesAndReverse(</span>frames: Frame[]): Frame[] {
-  if<span class="cstat-no" title="statement not covered" > (!frames.length) {</span>
+function stripSentryFramesAndReverse(frames: Frame[]): Frame[] {
+  if<span class="missing-if-branch" title="if path not taken" >I</span> (!frames.length) {
     retu<span class="cstat-no" title="statement not covered" >rn []</span>
   }
-  const localStack = fr<span class="cstat-no" title="statement not covered" >ames</span>
-  re<span class="cstat-no" title="statement not covered" >turn localStack</span>
+  const localStack = frames
+  return localStack
     .slice(0, STACKTRACE_LIMIT)
-    .map(fram<span class="fstat-no" title="function not covered" >e </span>=&gt; ({<span class="cstat-no" title="statement not covered" ></span>
+    .map(frame =&gt; ({
       ...frame,
       filename: frame.filename || localStack[0].filename,
       functionName: frame.functionName || '?',
@@ -181,7 +181,7 @@ function <span class="fstat-no" title="function not covered" >stripSentryFramesA
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-01T09:38:08.203Z
+                at 2022-08-04T09:36:21.436Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

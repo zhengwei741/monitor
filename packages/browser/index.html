@@ -2,79 +2,92 @@
   <!-- <script src="./dist/browser.umd.js"></script> -->
 
   <script>
-  function hashErrorId(str) {
-    let hash = 0;
-    if (str.length == 0)
-        return hash;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-        hash = hash & hash;
-    }
-    return hash;
-  }
-  const submitErrorids = []
-  var ErrorTypes;
-    (function (ErrorTypes) {
-        ErrorTypes["RE"] = "resource-error";
-        ErrorTypes["JE"] = "js-error";
-        ErrorTypes["CE"] = "cros-error";
-        ErrorTypes["PE"] = "promise-error";
-        ErrorTypes["HE"] = "http-error";
-    })(ErrorTypes || (ErrorTypes = {}));
-  function createErrorid(metrics) {
-    let id;
-    if (metrics.type === 'http') {
-        metrics = metrics;
-        id = metrics.type + metrics.method + metrics.status + metrics.url + metrics.appKey;
-    }
-    else {
-        switch (metrics.subtype) {
-            case ErrorTypes.PE:
-                id = metrics.type + metrics.stack + metrics.message + metrics.appKey;
-                break;
-            case ErrorTypes.RE:
-            case ErrorTypes.JE:
-            case ErrorTypes.CE:
-                metrics = metrics;
-                id = metrics.type + metrics.subtype + metrics.message + metrics.appKey + metrics.meta.filename;
-                break;
-            default:
-                id = metrics.type + metrics.message + metrics.appKey;
-        }
-    }
-    id = hashErrorId(id);
-    if (submitErrorids.includes(id)) {
+    const instrumentType = {
+      DC: "_dom_click",
+    };
+    const throttle = (fn, delay) => {
+      let canRun = true;
+      return function (...args) {
+        if (!canRun) return;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        fn.apply(this, args);
+        canRun = false;
+        setTimeout(() => {
+          canRun = true;
+        }, delay);
+      };
+    };
+    const handlers = {};
+    function addEventHandler(type, handler) {
+      handlers[type] = handlers[type] || [];
+      if (typeof handler !== "function") {
         return false;
+      }
+      if (handlers[type].findIndex(handler) !== -1) {
+        return false;
+      }
+      handlers[type].push(handler);
+      return true;
     }
-    submitErrorids.push(id);
-    return id;
-  }
-
-  const httpMetrics = {
-    type: 'http',
-    method: 'post',
-    status: 200,
-    url: 'http://test.com',
-    appKey: 'xxx'
-  }
-
-  const promiseErrorMetrics = {
-      type: 'js',
-      subtype: 'promise-error',
-      stack: [],
-      message: 'promise-error',
-      appKey: 'xxx'
+    function triggerHandlers(type, data) {
+      if (!type || !handlers[type]) {
+        return;
+      }
+      for (const handler of handlers[type] || []) {
+        try {
+          handler(data);
+        } catch (e) {
+          console.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`);
+        }
+      }
+    }
+    const fallbackGlobalObject = {};
+    function getGlobalObject() {
+      return typeof window !== "undefined"
+        ? window
+        : typeof self !== "undefined"
+        ? self
+        : fallbackGlobalObject;
+    }
+    function proxyDomClick(handler) {
+      const _global = getGlobalObject();
+      if (!("document" in _global)) {
+        return;
+      }
+      const res = addEventHandler(instrumentType.DC, handler);
+      if (!res) {
+        return;
+      }
+      const globalDOMEventHandler = throttle(function (e) {
+        // let target = e.target || e.srcElement
+        // if (!target) return
+        triggerHandlers(instrumentType.DC, e);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }, 1000);
+      _global.addEventListener("click", globalDOMEventHandler);
     }
 
-  const id = createErrorid(
-    httpMetrics
-  )
-  const id2 = createErrorid(
-    promiseErrorMetrics
-  )
+    proxyDomClick(() => {
+      console.log(123);
+    });
 
-  console.log(id)
-  console.log(id2)
+    const addDiv = () => {
+      const div = document.createElement("div");
+      div.style.width = "100px";
+      div.style.height = "100px";
+      div.innerText = "xxxx";
+      document.body.append(div);
+      return div;
+    };
+
+    setTimeout(() => {
+      const div = addDiv();
+      const click = new MouseEvent("click");
+      setTimeout(() => {
+        debugger;
+        div.dispatchEvent(click);
+      }, 1000);
+    }, 1000);
   </script>
 </html>

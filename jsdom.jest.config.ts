@@ -15,12 +15,6 @@ export default {
     'ts-jest': {
       tsconfig: './tsconfig.json',
       diagnostics: false
-    },
-    fetch: function(url, options) {
-      return Promise.resolve(options)
-    },
-    XMLHttpRequest: function() {
-      
     }
   },
   testEnvironment: 'jsdom',

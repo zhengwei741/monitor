@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.83% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/24</span>
+                <span class='fraction'>22/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">25% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>1/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.83% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/24</span>
+                <span class='fraction'>22/24</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -130,25 +130,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,26 +176,26 @@ export function createFetchSender(options: CreaterSenderOptions) {
   }
 &nbsp;
   return createrSender(makeRequest, options)
-}<span class="fstat-no" title="function not covered" ></span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-export f<span class="cstat-no" title="statement not covered" >unction createXHRSe<span class="fstat-no" title="function not covered" >nd</span>er(options: CreaterSenderOptions) {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-  const make<span class="cstat-no" title="statement not covered" >Request = function(requestData:</span> RequestData) {
-    return n<span class="cstat-no" title="statement not covered" >ew Promise((resolve, reject) =&gt; {</span>
+}
+&nbsp;
+export function createXHRSender(options: CreaterSenderOptions) {
+&nbsp;
+  const makeRequest = function(requestData: RequestData) {
+    return new Promise((resolve, reject) =&gt; {
       const xhr <span class="cstat-no" title="statement not covered" >= new XMLHttpRequest()</span>
 <span class="cstat-no" title="statement not covered" ></span>
       xhr.open('POST', options.url)
 &nbsp;
-      for (c<span class="cstat-no" title="statement not covered" >onst header in requestData.headers) {</span>
-        if (<span class="cstat-no" title="statement not covered" >Object.prototype.hasOwnProperty.call(requ<span class="fstat-no" title="function not covered" >es</span>tData.headers, header)) {</span>
-          xhr.se<span class="cstat-no" title="statement not covered" >tRequestHeader(header, requestData.headers[header]);</span>
-        }<span class="cstat-no" title="statement not covered" ></span>
+      for (const header in requestData.headers) {
+        if (Object.prototype.hasOwnProperty.call(requestData.headers, header)) {
+          xhr.se<span class="missing-if-branch" title="else path not taken" >E</span>tRequestHeader(header, requestData.headers[header]);
+        }
       }
   
-      xhr.ad<span class="cstat-no" title="statement not covered" >dEventListener('error', reje</span>ct)
+      xhr.addEventListener('error', reject)
   
       xhr.addEventListener('readystatechange', function() {
-<span class="cstat-no" title="statement not covered" >        if (xhr.readyState === 4) {</span>
+        if (xhr.readyState === 4) {
           resolve(xhr.response)
         }
       })
@@ -211,7 +211,7 @@ export f<span class="cstat-no" title="statement not covered" >unction createXHRS
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-01T09:38:08.203Z
+                at 2022-08-04T09:36:21.436Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
