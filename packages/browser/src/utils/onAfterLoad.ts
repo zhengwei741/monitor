@@ -1,14 +1,15 @@
-import { getGlobalObject } from '@monitor/utils'
+import { _global as global } from "./global";
 
-const global = getGlobalObject<Window>()
-
-export function onAfterLoad (callback: () => void) {
-  if (!('document' in global)) {
-    return
+export function onAfterLoad(callback: () => void) {
+  if (!("document" in global)) {
+    return;
   }
-  if (global.document.readyState === 'complete') {
-    setTimeout(callback)
+  if (global.document.readyState === "complete") {
+    setTimeout(callback);
   } else {
-    global.addEventListener('pageshow', callback, { once: true, capture: true });
+    global.addEventListener("pageshow", callback, {
+      once: true,
+      capture: true,
+    });
   }
 }

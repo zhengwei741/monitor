@@ -2,25 +2,13 @@
   "name": "@monitor/utils",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/utils.cjs",
-  "module": "dist/utils.esm.js",
-  "jsdelivr": "dist/utils.umd.js",
-  "types": "dist/types/utils.d.ts",
-  "devDependencies": {},
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhengwei741/monitor.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zhengwei741/monitor/issues"
-  },
-  "homepage": "https://github.com/zhengwei741/monitor#readme",
   "dependencies": {
     "@monitor/types": "1.0.0"
   }

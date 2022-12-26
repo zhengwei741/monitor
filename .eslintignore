@@ -1,15 +1,11 @@
-/node_modules
-/dist
-/doc
-**/dist
-**/build
-**/esm
-**/node_modules
-/scripts
-**/__tests__/*
+scripts
+.eslintrc.js
+rollup.config.js
+
+packages/**/__tests__
+packages/**/dist
+packages/**/node_modules
 
 commitlint.config.js
-
-jest.config.ts
-
-rollup.config.js
+jsdom.jest.config.ts
+jest-setup.js

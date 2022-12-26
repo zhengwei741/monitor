@@ -2,72 +2,98 @@ import {
   Sender,
   CreaterSenderOptions,
   RequestData,
-  Event,
-  SendFn
-} from '@monitor/types'
+  Metrics,
+} from "@monitor/types";
 import {
-  makePromiseBuffer,
-  PromiseBuffer,
   MonitorError,
   isFunction,
   isThenable,
-  isPlainObject
-} from '@monitor/utils'
+  getGlobalObject,
+  logger,
+} from "@monitor/utils";
 
-const DEFALUT_BUFFSIZE = 30
+const DEFALUT_BUFFSIZE = 30;
+
+const global = getGlobalObject<Window>();
+const nextTime =
+  global.requestIdleCallback ||
+  global.requestAnimationFrame ||
+  ((callback) => setTimeout(callback, 17));
+
+const MAX_WAITING_TIME = 3000;
 
 export function createrSender(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  makeRequest: (requestData: RequestData) => Promise<any>,
+  makeRequest: (requestData: RequestData) => Promise<unknown>,
   options?: CreaterSenderOptions
 ): Sender {
-  const buffer: PromiseBuffer<void> = makePromiseBuffer(options?.buffSize || DEFALUT_BUFFSIZE)
+  let buffer: Metrics[] = [];
 
-  const send: SendFn = function(event: Event): PromiseLike<void> {
-    const requestData: RequestData = {
-      body: event
+  const maxBuffSize = options?.buffSize || DEFALUT_BUFFSIZE;
+
+  let timer;
+
+  const send = (metrics: Metrics) => {
+    buffer = buffer.concat(metrics);
+
+    clearTimeout(timer);
+
+    if (buffer.length >= maxBuffSize) {
+      sendRequest();
+    } else {
+      timer = setTimeout(() => {
+        sendRequest();
+      }, MAX_WAITING_TIME);
     }
-    const requestTask = function(): PromiseLike<void> {
-      if (options) {
-        const { onBeforSend } = options
-        if (onBeforSend && isFunction(onBeforSend)) {
-          const rv = onBeforSend(event)
-          if (isThenable(rv)) {
-            return rv.then(res => {
-              if (!isPlainObject(rv) || rv === null) {
-                throw new MonitorError('onBeforSend 返回为空')
+  };
+
+  const sendRequest = async () => {
+    const sendBuffer = buffer.splice(0, maxBuffSize);
+
+    buffer = buffer.slice(maxBuffSize);
+
+    const requestData: RequestData = {
+      data: sendBuffer,
+      headers: options?.headers,
+    };
+
+    const onBeforSend = options?.onBeforSend;
+
+    try {
+      if (onBeforSend && isFunction(onBeforSend)) {
+        const rv = onBeforSend(sendBuffer);
+        if (!rv) {
+          throw new MonitorError("onBeforSend 返回为空");
+        }
+        if (isThenable(rv)) {
+          await rv.then(
+            (res) => {
+              requestData.data = res;
+              makeRequest(requestData);
+              if (buffer.length) {
+                nextTime(sendRequest);
               }
-              requestData.body = res
-              return makeRequest(requestData)
-            }, (e) => {
-              throw new MonitorError(`onBeforSend reject: ${e}`)  
-            })
-          } else if (!isPlainObject(rv) || rv === null) {
-            throw new MonitorError('onBeforSend 返回为空')
-          }
-          requestData.body = rv
+            },
+            (e) => {
+              throw new MonitorError(`onBeforSend reject: ${e}`);
+            }
+          );
         }
       }
-      return makeRequest(requestData)
+      makeRequest(requestData);
+      if (buffer.length) {
+        nextTime(sendRequest);
+      }
+    } catch (e) {
+      if (e instanceof MonitorError) {
+        logger.warn(e);
+        return Promise.resolve();
+      } else {
+        throw e;
+      }
     }
-    return buffer
-      .add(requestTask)
-      .then(
-        result => result,
-        error => {
-          if (error instanceof MonitorError) {
-            return Promise.resolve()
-          } else {
-            throw error
-          }
-        }
-      )
-  }
-
-  const flush = (timeout?: number): PromiseLike<boolean> => buffer.drain(timeout)
+  };
 
   return {
     send,
-    flush
-  }
+  };
 }

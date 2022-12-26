@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { isFunction } from './is'
+import { isFunction } from "./helper";
 
 export function markFunctionWrapped(wrapped: any, original: any) {
-  const proto = original.prototype || {}
-  wrapped.prototype = original.prototype = proto
+  const proto = original.prototype || {};
+  wrapped.prototype = original.prototype = proto;
 }
 
 export function fill(
@@ -12,28 +11,16 @@ export function fill(
   replacementFactory: (...args: any[]) => any
 ): void {
   if (!source[name]) {
-    return
+    return;
   }
-  const original = source[name]
+  const original = source[name];
 
-  const wrapped = replacementFactory(original)
+  const wrapped = replacementFactory(original);
 
   if (isFunction(wrapped)) {
     try {
-      markFunctionWrapped(wrapped, original)
-    } catch(e) {}
+      markFunctionWrapped(wrapped, original);
+    } catch (e) {}
   }
-  source[name] = wrapped
-}
-
-const defaultFunctionName = '<anonymous>'
-export function getFunctionName(fn: unknown) {
-  try {
-    if (!fn || typeof fn !== 'function') {
-      return defaultFunctionName
-    }
-    return fn.name || defaultFunctionName
-  } catch (e) {
-    return defaultFunctionName
-  }
+  source[name] = wrapped;
 }

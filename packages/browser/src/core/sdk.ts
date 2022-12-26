@@ -1,40 +1,39 @@
-import { SDK } from '@monitor/core'
-import { supportsFetch, logger } from '@monitor/utils'
-import { BrowserInitOptions, BrowserMetrics } from '../types/index'
-import { stackParser } from './stack-parsers'
-import { createFetchSender, createXHRSender } from './sender'
-import { initConfig } from './config'
-import { BrowserError } from './error'
-import Package from '../../package.json'
+import { SDK } from "@monitor/core";
+import { logger } from "@monitor/utils";
+import { BrowserInitOptions, BrowserMetrics } from "../types/index";
+import { initPlugins } from "./plugins";
+import { Metrics } from "./metrics";
+import Package from "../../package.json";
+import { createrBrowserSender } from "./sender";
 
 export class BrowserSDK extends SDK<BrowserInitOptions> {
-  private error: BrowserError = new BrowserError()
+  private metrics: Metrics = new Metrics();
 
   constructor(options: BrowserInitOptions) {
     if (options.debug === true) {
-      logger.enable()
+      logger.disable();
     }
 
-    initConfig(options)
+    // 安装默认插件
+    initPlugins(options);
 
-    options.stackParser = stackParser
-
-    options.sender = supportsFetch() ? createFetchSender : createXHRSender
+    // sender
+    options.createrSender = createrBrowserSender;
 
     options.sdkInfo = {
       name: Package.name,
       version: Package.version,
-      plugins: options.plugins.map(plugin => plugin.name)
-    }
-    super(options)
+      plugins: options.plugins
+        ? options.plugins.map((plugin) => plugin.name)
+        : [],
+    };
+
+    super(options);
   }
 
   capture(metrics: BrowserMetrics) {
-    metrics.appKey = this.appKey
-    const errorId = this.error.createErrorid(metrics)
-    if (errorId && typeof errorId === 'number') {
-      metrics.errorId = errorId
-      super.capture(metrics)
+    if (!this.metrics.includes(metrics)) {
+      super.capture(metrics);
     }
   }
 }

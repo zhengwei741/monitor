@@ -1,16 +1,20 @@
-import { InitOptions } from '@monitor/types'
-import { validateOption } from '@monitor/utils'
+import { Options, SdkInfo, CreaterSender } from "@monitor/types";
+import { validateOption } from "@monitor/utils";
 
-export function initOptions(options: InitOptions) {
-  const {
-    dsn,
-    appKey,
-    beforeSend,
-    beforeBreadcrumb
-  } = options
-  validateOption(dsn, 'dsn', 'string')
-  validateOption(appKey, 'appKey', 'string')
+/**
+ * 初始化配置 校验配置项等
+ * @param options
+ */
+export function validateInitOptions(options: Options) {
+  const { url, appId } = options;
 
-  validateOption(beforeSend, 'beforeSend', 'function')
-  validateOption(beforeBreadcrumb, 'beforeBreadcrumb', 'function')
+  validateOption(appId, "appId", "string");
+  validateOption(url, "url", "string");
+}
+
+export interface CoreOptions extends Options {
+  /** sdkInfo 版本信息 */
+  sdkInfo: SdkInfo;
+  // Sender
+  createrSender: CreaterSender;
 }

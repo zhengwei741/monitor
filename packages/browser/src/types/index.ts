@@ -1,2 +1,2 @@
-export * from './browserInitOptions'
-export * from './metrics'
+export * from "./browserInitOptions";
+export * from "./metrics";

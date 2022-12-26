@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Event } from './event'
+import { Metrics } from "./metrics";
+
 export interface Sender {
-  send: SendFn
-  flush: () => void
+  send: (metrics: Metrics) => void;
+  // flush: () => void;
 }
 
-export type SendFn = (event: Event) => PromiseLike<any>
-
-export type CreaterSender = (options: CreaterSenderOptions) => Sender
+export type CreaterSender = (options: CreaterSenderOptions) => Sender;
 
 export interface RequestData {
-  method?: string
-  body: any
-  headers?: { [key: string]: string }
+  method?: string;
+  data?: Metrics[];
+  headers?: { [key: string]: string };
 }
 
 export interface CreaterSenderOptions {
-  buffSize?: number
-  url: string
-  onBeforSend?: (event: Event) => RequestData
+  url: string;
+  buffSize?: number;
+  onBeforSend?: (metrics: Metrics[]) => Metrics[];
+  headers?: { [key: string]: string };
 }

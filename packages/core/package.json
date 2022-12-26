@@ -2,25 +2,22 @@
   "name": "@monitor/core",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/core.cjs",
-  "module": "dist/core.esm.js",
-  "jsdelivr": "dist/core.umd.js",
-  "types": "dist/types/core.d.ts",
-  "devDependencies": {},
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhengwei741/monitor.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zhengwei741/monitor/issues"
-  },
-  "homepage": "https://github.com/zhengwei741/monitor#readme",
   "dependencies": {
     "@monitor/types": "1.0.0",
     "@monitor/utils": "1.0.0"

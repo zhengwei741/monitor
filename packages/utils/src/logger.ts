@@ -1,49 +1,47 @@
-import { getGlobalSingleton, getGlobalObject } from './global'
+import { getGlobalSingleton, getGlobalObject } from "./global";
 
-export const CONSOLE_LEVELS = ['info', 'warn', 'error', 'log']
+export const CONSOLE_LEVELS = ["info", "warn", "error", "log"];
 
-const PREFIX = 'Monitor Logger '
+const PREFIX = "Monitor Logger ";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const global = getGlobalObject<Window | any>()
+const global = getGlobalObject<Window | any>();
 
-type LoggerMethod = (...args: unknown[]) => void
-type LoggerConsoleMethods = Record<typeof CONSOLE_LEVELS[number], LoggerMethod>
+type LoggerMethod = (...args: unknown[]) => void;
+type LoggerConsoleMethods = Record<typeof CONSOLE_LEVELS[number], LoggerMethod>;
 export interface Logger extends LoggerConsoleMethods {
-  disable(): void
-  enable(): void
+  disable(): void;
+  enable(): void;
 }
 
-function makeLogger (): Logger {
-  let enabled = false
+function makeLogger(): Logger {
+  let enabled = false;
   const logger: Partial<Logger> = {
     disable() {
-      enabled = true
+      enabled = true;
     },
     enable() {
-      enabled = false
-    }
-  }
+      enabled = false;
+    },
+  };
 
-  if ('console' in global) {
-    CONSOLE_LEVELS.forEach(level => {
+  if ("console" in global) {
+    CONSOLE_LEVELS.forEach((level) => {
       logger[level] = (...args) => {
         if (enabled) {
-          global.console[level](`${PREFIX}[${level}]:`, ...args)
+          global.console[level](`${PREFIX}[${level}]:`, ...args);
         }
-      }
-    })
+      };
+    });
   } else {
-    CONSOLE_LEVELS.forEach(level => {
-      logger[level] = () => undefined
-    })
+    CONSOLE_LEVELS.forEach((level) => {
+      logger[level] = () => undefined;
+    });
   }
 
-  return logger as Logger
+  return logger as Logger;
 }
 
-const logger: Logger = getGlobalSingleton('logger', makeLogger)
+const logger: Logger = getGlobalSingleton("logger", makeLogger);
 
-export {
-  logger
-}
+export { logger };

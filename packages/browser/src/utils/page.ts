@@ -44,9 +44,13 @@ export const getPageInfo = function () {
 
 // 返回 OI 用户来路信息
 export const getOriginInfo = () => {
-  const timing = _global.performance.getEntriesByType(
-    "navigation"
-  )[0] as PerformanceNavigationTiming;
+  const getEntriesByType = _global?.performance?.getEntriesByType;
+
+  const timing =
+    typeof getEntriesByType === "function"
+      ? (getEntriesByType("navigation")[0] as PerformanceNavigationTiming)
+      : null;
+
   let type = "";
   if (timing) {
     type = timing.type;

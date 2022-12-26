@@ -1,5 +1,5 @@
 export interface SdkInfo {
-  name: string
-  version: string
-  plugins?: string[]
+  name: string;
+  version: string;
+  plugins?: string[];
 }

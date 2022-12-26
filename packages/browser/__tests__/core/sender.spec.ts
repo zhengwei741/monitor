@@ -1,75 +1,42 @@
-import { createFetchSender, createXHRSender } from "../../src/core/sender";
-
-global.fetch = jest.fn().mockImplementationOnce(() =>
-  Promise.resolve({
-    json: () =>
-      Promise.resolve({
-        code: 0,
-        data: {
-          testData: "testData",
-        },
-      }),
-  })
-);
-
-const xhrMockClass = () => ({
-  open: jest.fn(),
-  send: jest.fn(),
-  setRequestHeader: jest.fn(),
-  addEventListener: jest.fn((eventName, fn) => {
-    if (eventName === "readystatechange") {
-      fn();
-    }
-  }),
-  readyState: 4,
-  response: {
-    httpTestData: "httpTestData",
-  },
-});
-
-// @ts-ignore
-global.XMLHttpRequest = jest.fn().mockImplementation(xhrMockClass);
+import { createrBrowserSender } from "../../src/core/sender";
 
 describe("sender.ts", () => {
-  let beforSend = false;
+  it("sender创建并正常发送请求", async () => {
+    const onBeforSend = jest.fn().mockResolvedValue({
+      name: "李四",
+    });
 
-  it("createFetchSender", async () => {
-    const options = {
-      buffSize: 10,
+    const sender = createrBrowserSender({
       url: "127.0.0.1:8080",
-      onBeforSend(data) {
-        beforSend = true;
-        return data || {};
-      },
-    };
+      onBeforSend,
+      buffSize: 30,
+    });
 
-    const sender = createFetchSender(options);
+    sender.send({ name: "张三" });
 
-    const res = await sender.send();
+    // sender 默认3秒后上报
+    await global.sleep(4000);
 
-    const { data } = await res.json();
-
-    expect(beforSend).toBeTruthy();
-
-    expect(data.testData).toEqual("testData");
+    // onBeforSend 至少执行一次
+    expect(onBeforSend).toHaveBeenCalled();
   });
 
-  it("createXHRSender", async () => {
-    const options = {
-      buffSize: 10,
+  it("sender 超过并发数量立即发送请求", async () => {
+    const onBeforSend = jest.fn().mockResolvedValue({
+      name: "李四",
+    });
+    const sender = createrBrowserSender({
       url: "127.0.0.1:8080",
-      onBeforSend(data) {
-        beforSend = true;
-        return data || {};
-      },
-    };
+      buffSize: 2,
+      onBeforSend,
+    });
+    sender.send({ name: "张三" });
+    sender.send({ name: "张三" });
+    sender.send({ name: "张三" });
 
-    const sender = createXHRSender(options);
+    await global.sleep(1000);
 
-    const response = await sender.send();
-
-    expect(beforSend).toBeTruthy();
-
-    expect(response.httpTestData).toEqual("httpTestData");
+    // onBeforSend 至少执行一次
+    expect(onBeforSend).toHaveBeenCalled();
   });
 });

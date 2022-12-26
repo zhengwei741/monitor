@@ -1,30 +1,30 @@
-import { getGlobalObject, throttle } from '@monitor/utils'
-import { addEventHandler, triggerHandlers } from '@monitor/core'
+// import { throttle } from "@monitor/utils";
+import { addEventHandler, triggerHandlers } from "@monitor/core";
+import { _global } from "./global";
 
 const instrumentType = {
-  DC: '_dom_click'
-}
+  DC: "_dom_click",
+};
 
-type handlerType = (e: Event) => void
+type handlerType = (e: Event) => void;
 
-export function proxyDomClick(handler: handlerType) { 
-  const _global = getGlobalObject<Window>()
-
-  if (!('document' in _global)) {
-    return
+export function proxyDomClick(handler: handlerType) {
+  if (!("document" in _global)) {
+    return;
   }
 
-  const res = addEventHandler(instrumentType.DC, handler)
+  const res = addEventHandler(instrumentType.DC, handler);
   if (!res) {
-    return
+    return;
   }
 
-  const globalDOMEventHandler = throttle(function(e: Event) {
-    // let target = e.target || e.srcElement
-    // if (!target) return
-    triggerHandlers(instrumentType.DC, e)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }, 1000) as any
+  // const globalDOMEventHandler = throttle(function (e: Event) {
+  //   triggerHandlers(instrumentType.DC, e);
+  // }, 500) as any;
 
-  _global.addEventListener('click', globalDOMEventHandler)
+  const globalDOMEventHandler = function (e: Event) {
+    triggerHandlers(instrumentType.DC, e);
+  };
+
+  _global.addEventListener("click", globalDOMEventHandler);
 }

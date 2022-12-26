@@ -1,64 +1,56 @@
-const json = require('rollup-plugin-json')
-const resolve = require('rollup-plugin-node-resolve')
-const ts = require('rollup-plugin-typescript2')
-const commonjs = require('rollup-plugin-commonjs') // commonjs模块转换插件
-const clear = require('rollup-plugin-clear')
-const size = require('rollup-plugin-sizes')
-const { visualizer } = require('rollup-plugin-visualizer')
-const { terser } = require('rollup-plugin-terser')
+const json = require("rollup-plugin-json");
+const resolve = require("rollup-plugin-node-resolve");
+const ts = require("rollup-plugin-typescript2");
+const commonjs = require("rollup-plugin-commonjs"); // commonjs模块转换插件
+const clear = require("rollup-plugin-clear");
+const size = require("rollup-plugin-sizes");
+const { visualizer } = require("rollup-plugin-visualizer");
+const { terser } = require("rollup-plugin-terser");
 
-const path = require('path')
+const path = require("path");
 
 if (!process.env.TARGET) {
-  throw new Error('缺少 TARGET')
+  throw new Error("缺少 TARGET");
 }
-const name = process.env.TARGET
+const name = process.env.TARGET;
 // packages 路径
-const packagesDir = path.resolve(__dirname, 'packages')
+const packagesDir = path.resolve(__dirname, "packages");
 // packages 下包的路径
-const packageDir = path.resolve(packagesDir, process.env.TARGET)
+const packageDir = path.resolve(packagesDir, process.env.TARGET);
 // 旧dist路径
-const packageDirDist = process.env.LOCALDIR === 'undefined' ? `${packageDir}/dist` : process.env.LOCALDIR
+const packageDirDist =
+  process.env.LOCALDIR === "undefined"
+    ? `${packageDir}/dist`
+    : process.env.LOCALDIR;
 // package.json
-const pkgDir = path.resolve(packageDir, './package.json')
-const pkg = require(pkgDir)
+const pkgDir = path.resolve(packageDir, "./package.json");
+const pkg = require(pkgDir);
 // 是否生成申明文件
-const isDeclaration = process.env.TYPES !== 'false'
+const isDeclaration = process.env.TYPES !== "false";
+
+const filter = (keys = []) => keys.filter((key) => !key.startsWith("@monitor"));
 
 const common = {
   input: `${packageDir}/src/index.ts`,
-  output: [
-    {
-      file: `${packageDir}/${pkg.main}`,
-      format: 'cjs'
-    },
-    {
-      file: `${packageDir}/${pkg.module}`,
-      format: 'esm'
-    },
-    {
-      file: `${packageDir}/${pkg.jsdelivr}`,
-      format: 'umd',
-      name: 'monitor' // 注入window对象名
-    },
-  ],
   external: [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
+    ...filter(Object.keys(pkg.dependencies || {})),
+    ...filter(Object.keys(pkg.peerDependencies || {})),
   ],
   plugins: [
-    resolve(),
+    resolve({
+      preferBuiltins: true,
+    }),
     // 打包大小
     size(),
     // 打包分析
     visualizer(),
     json(),
     commonjs({
-      exclude: 'node_modules'
+      exclude: "node_modules",
     }),
     ts({
-      tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-      // 就是用来编译 TypeScript 文件，useTsconfigDeclarationDir 
+      tsconfig: path.resolve(__dirname, "tsconfig.json"),
+      // 就是用来编译 TypeScript 文件，useTsconfigDeclarationDir
       useTsconfigDeclarationDir: true,
       tsconfigOverride: {
         compilerOptions: {
@@ -66,77 +58,82 @@ const common = {
           declarationMap: isDeclaration, // 是否生成.map文件
           // 声明文件路径
           declarationDir: `${packageDirDist}`,
-          module: 'ES2015'
-        }
+          module: "ES2015",
+        },
       },
-      include: ['*.ts+(|x)', '**/*.ts+(|x)', '../**/*.ts+(|x)']
+      include: ["*.ts+(|x)", "**/*.ts+(|x)", "../**/*.ts+(|x)"],
     }),
     clear({
-      targets: [packageDirDist]
-    })
-  ]
-}
+      targets: [packageDirDist],
+    }),
+  ],
+  output: {
+    name: "MONITOR",
+    globals: {
+      "crypto-js": "CryptoJS",
+    },
+  },
+};
 
 const esmPackage = {
   ...common,
   output: {
     file: `${packageDirDist}/${name}.esm.js`,
-    format: 'es',
-    name: 'MONITOR',
+    format: "es",
     sourcemap: true,
-    ...common.output
+    ...common.output,
   },
   plugins: [
     ...common.plugins,
     clear({
-      targets: [packageDirDist]
-    })
-  ]
-}
+      targets: [packageDirDist],
+    }),
+  ],
+};
 
 const cjsPackage = {
   ...common,
   external: [],
   output: {
     file: `${packageDirDist}/${name}.js`,
-    format: 'cjs',
-    name: 'MONITOR',
+    format: "cjs",
     sourcemap: true,
     minifyInternalExports: true,
-    ...common.output
+    ...common.output,
   },
-  plugins: [...common.plugins]
-}
+  plugins: [...common.plugins],
+};
 
 const iifePackage = {
   ...common,
+  // external: [...common.external],
   external: [],
   output: {
     file: `${packageDirDist}/${name}.min.js`,
-    format: 'iife',
-    name: 'MONITOR',
-    ...common.output
+    format: "iife",
+    ...common.output,
   },
-  plugins: [...common.plugins, terser()]
-}
+  plugins: [...common.plugins, terser()],
+};
 
 const umdPackage = {
   ...common,
+  // external: [...common.external],
   external: [],
   output: {
     file: `${packageDirDist}/${name}.umd.js`,
-    format: 'umd',
-    name: 'MONITOR'
+    format: "umd",
+    ...common.output,
   },
-  plugins: [...common.plugins]
-}
+  plugins: [...common.plugins],
+};
 
 const total = {
   esmPackage,
   cjsPackage,
   iifePackage,
-  umdPackage
-}
-let result = total
+  umdPackage,
+};
+let result = total;
 
-export default [...Object.values(result)]
+export default [...Object.values(result)];

@@ -2,23 +2,11 @@
   "name": "@monitor/types",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/types.cjs",
-  "module": "dist/types.esm.js",
-  "jsdelivr": "dist/types.umd.js",
-  "types": "dist/types/types.d.ts",
-  "devDependencies": {},
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhengwei741/monitor.git"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zhengwei741/monitor/issues"
-  },
-  "homepage": "https://github.com/zhengwei741/monitor#readme"
+  "license": "ISC"
 }

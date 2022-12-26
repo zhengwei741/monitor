@@ -1,31 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { getFunctionName } from '@monitor/utils'
+import { getFunctionName } from "@monitor/utils";
 
-export type HandlerCallback = (data: any) => void
+export type HandlerCallback = (data: any) => void;
 
-const handlers: { [key: string]: HandlerCallback[] } = {}
+const handlers: { [key: string]: HandlerCallback[] } = {};
 
-export function addEventHandler(type: string, handler: HandlerCallback | undefined): boolean {
-  handlers[type] = handlers[type] || []
-  if (typeof handler !== 'function') {
-    return false
+// 订阅模式实现，统一注册触发事件
+
+export function addEventHandler(
+  type: string,
+  handler: HandlerCallback | undefined
+): boolean {
+  handlers[type] = handlers[type] || [];
+  if (typeof handler !== "function") {
+    return false;
   }
   if (handlers[type].findIndex(handler) !== -1) {
-    return false
+    return false;
   }
-  handlers[type].push(handler)
-  return true
+  handlers[type].push(handler);
+  return true;
 }
 
-export function triggerHandlers(type: string, data: any): void {
+export function triggerHandlers(type: string, data: unknown) {
   if (!type || !handlers[type]) {
-    return
+    return;
   }
   for (const handler of handlers[type] || []) {
     try {
-      handler(data)
+      handler(data);
     } catch (e) {
-      console.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`)
+      console.log(`Type:${type}\nName:${getFunctionName(handler)}\n错误`);
     }
   }
 }

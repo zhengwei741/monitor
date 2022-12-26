@@ -2,25 +2,21 @@
   "name": "@monitor/browser",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/browser.cjs",
+  "main": "dist/browser.cjs.js",
   "module": "dist/browser.esm.js",
   "jsdelivr": "dist/browser.umd.js",
-  "types": "dist/types/browser.d.ts",
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhengwei741/monitor.git"
+  "unpkg": "dist/browser.min.js",
+  "types": "dist/browser.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zhengwei741/monitor/issues"
-  },
-  "homepage": "https://github.com/zhengwei741/monitor#readme",
   "dependencies": {
     "@monitor/core": "1.0.0",
     "@monitor/types": "1.0.0",
-    "@monitor/utils": "1.0.0"
+    "@monitor/utils": "1.0.0",
+    "crypto-js": "^4.1.1"
   }
 }

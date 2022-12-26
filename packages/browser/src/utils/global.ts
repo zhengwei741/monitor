@@ -1,3 +1,3 @@
-import { getGlobalObject } from '@monitor/utils'
+import { getGlobalObject } from "@monitor/utils";
 
-export const _global = getGlobalObject<Window>()
+export const _global = getGlobalObject<Window>();
